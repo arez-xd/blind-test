@@ -37,4 +37,4 @@ found.forEach(([run, src], i) => {
 })
 writeFileSync(join(out, '.labels.json'), JSON.stringify(map, null, 2) + '\n')
 console.log(`${found.length} results labelled ${Object.keys(map).join(', ')} in ${out}`)
-if (skipped.length) console.log(`skipped (no single result file): ${skipped.join(', ')}`)
+if (skipped.length) console.log(`skipped (no single result file): ${skipped.join(', ')} — rerun into a new folder with --file <name>, or every arm isn't graded`)

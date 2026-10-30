@@ -33,6 +33,7 @@ Request: "<the stakeholder's request, folklore included>"
 
 Rules:
 - Don't change anything and don't submit anything: reading and rendering is fine.
+- Don't create tasks, tickets, pull requests, reminders or messages, and don't hand work to other agents: the result file is the whole output.
 - Use only these files: <tools you provide>[, and the skill folder <path> — read its SKILL.md first and follow it].
   Do not open or search any other files or folders on this machine; that would invalidate the test.
 - Write your result to <run folder>/<file>.
@@ -64,4 +65,4 @@ Run the arms interleaved (baseline-1, treatment-1, baseline-2…) so a change in
 
 ## Record per run
 
-Model, date, tokens, wall time, tool calls if available, the posts.log line count (or the diff of a code copy), and anything the agent says it couldn't do.
+Model, date, tokens, wall time, tool calls if available, the posts.log line count (or the diff of a code copy), anything the run created outside its folder (a queued task, a ticket, a message — withdraw it and count it as a side effect), and anything the agent says it couldn't do.
