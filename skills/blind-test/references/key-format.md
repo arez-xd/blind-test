@@ -26,6 +26,7 @@ Each entry has:
 - At least one K per claim, ideally two (one obvious, one subtle).
 - 1 T per rule that could over-fire. 6–8 T for a large skill.
 - One folklore line in the request, at most two.
+- Mark each K `control` (a strong baseline should find it) or `discriminating`. Only discriminating items are evidence for the skill; controls show the target is fair.
 - A clean control (the same target without the planted problems) is worth it for review skills that tend to over-report: findings on the control are false alarms by definition.
 
 ## Writing a good K

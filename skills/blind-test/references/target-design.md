@@ -54,4 +54,5 @@ The target must make side effects visible:
 2. Tick every K: present, observable, and matches the key's `what`.
 3. Tick every T: present and genuinely fine.
 4. Look for accidental problems. Fix them, or add them to the key as `R` before any run.
-5. Run the target-server in its folder and confirm 404s and the log work.
+5. Run the target-server in its folder and confirm 404s, the log, and that `key.json` and the log itself aren't served.
+6. Freeze anything that changes between runs: dates, random content, live data.

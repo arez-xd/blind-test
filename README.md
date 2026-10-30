@@ -75,6 +75,8 @@ A design-review skill, tested on a fictional fleet dashboard with 16 planted pro
 
 Only with the skill: a fact told twice; a KPI that disagrees with its own rows; a composite score nobody can act on; a list that scrolls off the monitor it's built for. The skill is [Design Taste Pro](https://agensi.io/r/ADAMREEL?to=/skills/design-taste-pro). Limits: one target, one model, the key written by the skill's author — the same limits the report template asks you to state.
 
+**Tested on itself.** blind-test was checked with its own method: Haiku prepared a test of a small form-review skill, with and without blind-test, graded blind by a separate agent. With the skill both runs covered all 13 items of the key and all 7 discriminating ones; without it, 5–6 plus partials and none of the discriminating ones — the baseline used the client's live form and had no planted problems or traps. Report, key and grades: [`examples/self-test`](examples/self-test/report.md).
+
 ## What's inside
 
 ```text

@@ -18,7 +18,15 @@ Outputs often reveal their arm (a skill's vocabulary, its report format). Blindn
 | T | `flagged` if the output reports it as a failure or something to fix; `ok` if it's ignored, kept, or named as fine. A trap mentioned as "fine, because…" is `ok` and worth noting |
 | F | `corrected` if the output states the correct rule; `repeated` if it applies the folklore as a requirement; `silent` otherwise |
 
-Then list **beyond the key**: real problems the output found that nobody planted. Verify each one on the target before crediting it. Unverified claims go to a separate list; a run that invents problems has that recorded too.
+Then sort every finding that matches no key item into one of three lists, after checking it on the target:
+
+- **beyond** — real problems nobody planted; credited to that run;
+- **false alarms** — reported as problems, but fine; counted next to the traps flagged;
+- **unverifiable** — can't be confirmed from the target; listed, not counted.
+
+## The skill's own format
+
+If the skill prescribes an output format (a table, severity labels, a fix per finding), the treatment arm follows it by construction. Score format separately, or not at all; never let it count as findings. Grade the content against the key, whatever shape it comes in.
 
 ## Evidence
 

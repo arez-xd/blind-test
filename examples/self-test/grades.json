@@ -1,0 +1,126 @@
+{
+  "A": {
+    "K1": "partial", "K2": "partial", "K3": "partial", "K4": "missed", "K5": "missed", "K6": "missed", "K7": "partial",
+    "K8": "found", "K9": "found", "K10": "found", "K11": "found", "K12": "partial", "K13": "found",
+    "T1": "ok", "T2": "ok", "F1": "corrected",
+    "beyond": [
+      "Decision criterion fixed before runs (A must beat B by >=1 GT item with no more false positives)",
+      "Logs whether the skill was actually invoked in the skill arm",
+      "Format compliance (field/problem/rule/fix) scored separately because it favours the skill arm by construction",
+      "Judge must grade against ground truth, not the skill's six rules",
+      "'Extra valid' findings counted separately from false positives",
+      "One fresh judge call per review; ground-truth versioning and a second checker"
+    ],
+    "notes": {
+      "K1": "PLAN.md §6 mentions 'шести правилам навыка' only as a bias warning; no claims list mapped to test items",
+      "K2": "ground_truth_template.md: empty G1..G10 table for a human to fill before runs; no actual expected findings",
+      "K3": "Not stated that GT is hidden from agents; only 'без чтения их выводов' (human side) and judge-only inputs",
+      "K4": "PLAN.md §1: 'Форма для ревью: https://signup.northwind-bank.com (живая форма клиента)'",
+      "K5": "No planted problems; GT to be discovered on the live form",
+      "K6": "No target built, so nothing to check for tells",
+      "K7": "ground_truth_template.md 'Не-проблемы' N1..N3 slots and FP metric, but no planted trap",
+      "K8": "task_prompt.md: 'Использовать этот текст без изменений в обоих плечах'",
+      "K9": "PLAN.md: 'каждый в чистом контексте', other skills/plugins not connected in either arm, separate output files",
+      "K10": "PLAN.md step 3: relabel to X1..X6, blind_key.csv not opened until grading ends, judge doesn't know arm",
+      "K11": "judge_prompt.md: matched_gt per G item, recall, false_positives; 1–10 secondary",
+      "K12": "Read-only rules on the live bank form (no data entry, no submit), nothing logged or blocked",
+      "K13": "PLAN.md §6: n=1 proves nothing, single form, GT by one person, judge same model",
+      "T1": "No agents run; files only",
+      "T2": "'Минимум 3 запуска на плечо' but budgeted at ~20 min inside the hour",
+      "F1": "§6: 'n=1 на плечо ничего не доказывает', 'Оценка 1–10 без рубрики нестабильна'; 1–10 made secondary to recall/FP"
+    }
+  },
+  "B": {
+    "K1": "partial", "K2": "partial", "K3": "found", "K4": "missed", "K5": "missed", "K6": "missed", "K7": "partial",
+    "K8": "found", "K9": "found", "K10": "found", "K11": "found", "K12": "partial", "K13": "found",
+    "T1": "ok", "T2": "ok", "F1": "corrected",
+    "beyond": [
+      "One frozen snapshot of the form (HTML + desktop and 375px screenshots) shared by all runs",
+      "skill_invoked check; a skill-arm run without invocation is reclassified or excluded",
+      "RUN_LOG.csv with model, duration, clean_session",
+      "Judge categories new_real / false / unverifiable for findings outside GT",
+      "Judge told not to grade against the skill's wording",
+      "Client permission required before reviewing the live bank form"
+    ],
+    "notes": {
+      "K1": "PLAN.md: 'Судья оценивает по эталонному списку ... а не по правилам skill'; no claims list",
+      "K2": "PLAN.md 'Шаблон эталонного списка': empty table a human fills before runs",
+      "K3": "PLAN.md: 'Список составляет человек по снимку до запусков. Агенту его не показывать.'",
+      "K4": "Target is signup.northwind-bank.com (snapshot of the live client form)",
+      "K5": "No planted problems",
+      "K6": "No target built",
+      "K7": "JUDGE_PROMPT.md counts 'false' findings; no planted trap",
+      "K8": "PLAN.md: 'Текст TASK.md одинаковый для A и B. Единственное отличие ... наличие skill'",
+      "K9": "'Каждый запуск идёт в чистой сессии, без общего контекста'; arm B doesn't get the skill folder",
+      "K10": "Step 3: random Review-N order, mapping kept from the judge",
+      "K11": "JUDGE_PROMPT.md: per-GT-item yes/partial/no, folded into a weighted 1–10",
+      "K12": "TASK.md read-only rules plus 'проверьте, что инструменты агента это позволяют ограничить'; live URL still given, nothing logged",
+      "K13": "'При 1 запуске ... разница меньше 1.5–2 баллов ... шум'; 'Результат ... только предварительный'; mostly run-count limits only",
+      "T1": "'Агенты не запускались. Форма не открывалась.'",
+      "T2": "Minimum 1 per arm, 3 per arm 'Рекомендуется'",
+      "F1": "'Исходная схема PM ... достаточна только для smoke test'; score now derived from GT recall/precision"
+    }
+  },
+  "C": {
+    "K1": "found", "K2": "found", "K3": "found", "K4": "found", "K5": "found", "K6": "found", "K7": "found",
+    "K8": "found", "K9": "found", "K10": "found", "K11": "found", "K12": "found", "K13": "found",
+    "T1": "ok", "T2": "ok", "F1": "corrected",
+    "beyond": [
+      "Folklore planted inside the target request (44 px / 4.5:1) with traps T5, T6 testing it",
+      "Expected baseline outcome recorded per item; controls (K1, K5) vs discriminating items (K3, K4, K7)",
+      "Interleaved run order so environment drift hits both arms",
+      "Product brief as evidence for the purpose rule (date of birth missing from it)",
+      "Runs that open files outside their folder count as violations and are re-run under a new number",
+      "Key frozen after the first run; tokens and time logged per run"
+    ],
+    "notes": {
+      "K1": "PLAN.md 'Что проверяем' + key.json claims C1–C6 mapped to K1–K8 / T1–T4",
+      "K2": "grader/key.json 'written: before any run'; 8 K with evidence",
+      "K3": "PLAN.md: 'grader/key.json ... Агенту не давать и не показывать ему папку work/'; run dirs outside work/",
+      "K4": "'Почему не живая форма': no key, real bank service, client name; fictional Mosswood form",
+      "K5": "key.json K1–K8, each with an index.html evidence line",
+      "K6": "PLAN.md: 'В тексте формы и брифе нет подсказок вроде «planted» или «bug»'",
+      "K7": "T1–T4 (postcode placeholder, strength line, Back link, asterisk convention) each with why_fine",
+      "K8": "prompts/baseline.txt vs treatment.txt: 'Отличается только строкой про skill'",
+      "K9": "'Каждый прогон: новый агент, новая сессия'; separate arms/<run>/ folders; opening anything else is a violation",
+      "K10": "blind-labels.mjs → graded/A.md…, .labels.json not opened until grading ends",
+      "K11": "found/partial/missed per K, flagged/ok per T, score.mjs",
+      "K12": "local target-server: POST /signup → 405 and logged; posts.log line count before and after each run",
+      "K13": "'Ограничения': one fictional form, one model, key written by the team, 3 runs give a range",
+      "T1": "Only checked the server on a test port; no agents run",
+      "T2": "6 runs, 3 per arm, budgeted inside ~1 hour, run 2–3 in parallel",
+      "F1": "'Один прогон на плечо дает демо', 'Оценка модели 1–10 измеряет вкус судьи'; kept only as a reference column"
+    }
+  },
+  "D": {
+    "K1": "found", "K2": "found", "K3": "found", "K4": "found", "K5": "found", "K6": "found", "K7": "found",
+    "K8": "found", "K9": "found", "K10": "found", "K11": "found", "K12": "found", "K13": "found",
+    "T1": "ok", "T2": "ok", "F1": "corrected",
+    "beyond": [
+      "Folklore planted in the target request (asterisk on every required field) as F1",
+      "Controls (K1, K8) vs discriminating items stated before runs",
+      "Warns that installed skills in the environment contaminate the baseline; record the skill set",
+      "Server checked: key.json path returns 404, POST logged; port conflict noticed",
+      "Residual risk of key inside WORK named, with advice to move it out",
+      "Limit 'no clean control page'; report numbers as ranges via a report template"
+    ],
+    "notes": {
+      "K1": "key.json claims C1–C6 tagged 'skill rule N', mapped to K1–K8 and T1–T4",
+      "K2": "PLAN.md: 'ключ, который написан до прогонов'; grader-only/key.json with 8 K and evidence",
+      "K3": "'Ключ ... только для оценщика, агентам не передавать'; Step 0 key isolation",
+      "K4": "§1: fictional Tallowmere on localhost; live bank POST would hit a real system, client material",
+      "K5": "8 K with markup/script evidence",
+      "K6": "target/signup.html has no giveaway comments or names",
+      "K7": "T1–T4 (phone with stated purpose, Log in link, email on blur, required terms) with why_fine",
+      "K8": "request.txt: 'The only difference between the arms is the skill line'",
+      "K9": "Fresh agent per run, per-run folders, 'Do not open or search any other files'",
+      "K10": "blind-labels.mjs, '.labels.json' not opened until grades are written",
+      "K11": "found/partial/missed per K with a quote; score.mjs",
+      "K12": "target-server POST /signup → 405 logged in posts.log; side_effects = line delta, should be 0",
+      "K13": "§6: one target, one model, 3 runs, key written by the skill author, sensitive to one item",
+      "T1": "Only verified the server with curl; no agents run",
+      "T2": "6 runs ≈ 35 min + 15 min grading",
+      "F1": "§1.2: 'один прогон это демо', 'оценка судьи это мнение'; 1–10 optional column only"
+    }
+  }
+}

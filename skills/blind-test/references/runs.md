@@ -18,6 +18,8 @@ blind/
 
 Give every run the absolute path of its own folder and nothing else from `blind/`.
 
+If you're preparing the test for someone else to run, put the key in a sibling folder (`blind/key/`), never inside the folders you hand over, and say in the plan where it is and that run agents must not get it.
+
 ## The request
 
 Write it once, paste it into every arm. Only the skill block changes.
@@ -46,6 +48,9 @@ Baseline arm: drop the skill line and add "Don't use any skills." Competitor arm
 - **No shared paths.** The key, other runs, the target's source (when the test is about the rendered result) and this skill stay outside the folders a run is given.
 - **Competitor skills in a sandbox.** Their own folder, their own `HOME` and cache, no hooks installed into the real environment. Check what their scripts download before running them; verify checksums when the project publishes them.
 - **Same model, same tools, same viewport, same time limits** in every arm.
+- **A clean baseline.** Skills, rules or plugins installed in the environment load into the baseline too. List what's installed and disable what overlaps with the skill under test, or record it as a limit.
+- **The skill was actually used.** A treatment run that never opened `SKILL.md` is a baseline run with a label. Check its tool log, or ask every run to end its result with one line naming the rules it applied; a run that didn't use the skill is excluded and rerun under a new number.
+- **A frozen target.** Every run sees the same target. If it renders differently over time (live data, dates, random content), freeze it: fixed data, a fixed clock, a saved snapshot.
 
 ## How many runs
 

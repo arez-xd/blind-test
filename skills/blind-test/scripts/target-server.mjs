@@ -44,4 +44,6 @@ createServer(async (req, res) => {
   if (!file || file === log || /(^|\/)(\.[^/]*|key\.json)$/.test(file)) { res.writeHead(404, { 'content-type': 'text/html; charset=utf-8' }); return res.end('<!doctype html><title>Not built</title><p>This screen is not part of the demo.</p>') }
   res.writeHead(200, { 'content-type': types[extname(file)] || 'application/octet-stream', 'cache-control': 'no-store' })
   res.end(req.method === 'HEAD' ? undefined : await readFile(file))
-}).listen(port, '127.0.0.1', () => console.log(`target ${base} on http://127.0.0.1:${port} · log ${log}`))
+})
+  .on('error', e => { if (e.code === 'EADDRINUSE') { console.error(`port ${port} is busy; pass --port <free port>`); process.exit(1) } throw e })
+  .listen(port, '127.0.0.1', () => console.log(`target ${base} on http://127.0.0.1:${port} · log ${log}`))

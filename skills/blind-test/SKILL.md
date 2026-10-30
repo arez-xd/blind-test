@@ -23,7 +23,7 @@ Find out, from the files first and the user second:
 2. **The test type.** *Review* (the agent finds problems in something that exists) or *Build* (the agent makes something from a brief). Many skills need both. Read `references/build-tests.md` for Build.
 3. **The arms.** Baseline (same agent, no skill) always. Treatment (with the skill). Optionally a competitor skill, installed in a sandbox (`references/runs.md`).
 4. **The model.** Start with the smallest model the skill is meant for: a skill's effect shows most where the model is weakest, and runs are cheap. Confirm on a larger one only if the result is borderline.
-5. **The budget.** Runs per arm (one is a demo, two shows the spread, three or more before you publish a number), tokens per run.
+5. **The budget.** Runs per arm (one is a demo, two shows the spread, three or more before you publish a number), tokens per run. For a quick check — an hour, a small skill — use one target, 6–8 K, 2–3 T, two runs per arm, and say that's what it is; scale up before a public number.
 
 ## 1. Read what applies
 
@@ -47,10 +47,10 @@ Find out, from the files first and the user second:
 
 ## 3. Loop
 
-1. **Claims → key.** Write the claims, then for each claim the planted problems (K), traps (T), and the folklore line for the request (`references/key-format.md`). Keep `key.json` outside every folder an agent can read.
+1. **Claims → key.** Write the claims, then for each claim the planted problems (K), traps (T), and the folklore line for the request (`references/key-format.md`). Mark which K are controls (a strong baseline should find them) and which discriminate. Write the decision rule now, before any run: what result means the skill helps ("treatment finds at least two more discriminating K than baseline in every run, with no more traps flagged"). Keep `key.json` outside every folder an agent can read.
 2. **Target.** Build it from the key (`references/target-design.md`): realistic, internally consistent, no comments or names that give a planted problem away. Serve it with `scripts/target-server.mjs` or hand over a folder copy.
 3. **Check the target before any run.** Every K is actually present and observable; every T is actually legitimate; nothing else is accidentally broken (or, if it is, it's in the key as R, a real issue).
-4. **Runs.** Same request, isolated agents, one folder per run (`references/runs.md`). Record tokens and time.
+4. **Runs.** Same request, isolated agents, one folder per run (`references/runs.md`). Confirm each treatment run actually used the skill; record tokens and time.
 5. **Blind grading.** Relabel the outputs, grade each against the key: found, partial, missed; traps reported as failures; folklore corrected or repeated; side effects (`references/grading.md`). Then unblind.
 6. **Score.** `scripts/score.mjs key.json grades.json` → the table per arm, and the classes only the treatment found.
 7. **Fix and rerun.** Misses and false alarms become fixes to the skill, written as classes. Rerun the same arms. Before publishing, one more run on a target the skill was never tuned on.
