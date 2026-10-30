@@ -1,1 +1,1 @@
-k=k3&gx=468&gy=278&gw=440&gh=468&rad=150&tint=.55&blur=40
+k=p1&tint=.55&blur=40&bevel=14&hl=.5&gx=0&gy=0&gw=0&gh=0&rad=0

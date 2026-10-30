@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:transparent}canvas{display:block}</style></head><body>
+<canvas id="out" width="1024" height="1024"></canvas><script>
+// Logo scenes drawn in 2D canvas: a layer that blurs progressively along x (sharp → frosted), on the series tile.
+const P=Object.fromEntries(new URLSearchParams(location.search)), W=1024, H=1024
+const C=(P.c||'#22d3ee,#6366f1,#a855f7').split(',')
+const mk=()=>{const c=document.createElement('canvas');c.width=W;c.height=H;return c}
+const grad=(x,a,b)=>{const g=x.createLinearGradient(a[0],a[1],b[0],b[1]);C.forEach((c,i)=>g.addColorStop(i/(C.length-1),c));return g}
+const rr=(x,X,Y,w,h,r)=>{x.beginPath();x.roundRect(X,Y,w,h,r)}
+// progressive blur of layer `src` from x0 (sharp) to x1 (max blur `mb`)
+function ramp(src,x0,x1,mb,steps=10){const out=mk(),o=out.getContext('2d');o.drawImage(src,0,0)
+ for(let i=1;i<=steps;i++){const t=i/steps,b=mk(),bx=b.getContext('2d');bx.filter=`blur(${mb*t*t}px)`;bx.drawImage(src,0,0);bx.filter='none'
+  const a=x0+(x1-x0)*(i-1)/steps,z=x0+(x1-x0)*i/steps,g=bx.createLinearGradient(a,0,z,0);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,1)')
+  bx.globalCompositeOperation='destination-in';bx.fillStyle=g;bx.fillRect(0,0,W,H);o.drawImage(b,0,0)}
+ return out}
+function key(){const c=mk(),x=c.getContext('2d'),g=grad(x,[180,380],[860,640]);x.fillStyle=g
+ x.beginPath();x.arc(300,512,132,0,7);x.fill();rr(x,380,472,470,80,40);x.fill();rr(x,660,520,60,116,20);x.fill();rr(x,756,520,60,84,20);x.fill()
+ x.globalCompositeOperation='destination-out';x.beginPath();x.arc(300,512,52,0,7);x.fill();return c}
+function eye(){const c=mk(),x=c.getContext('2d');x.lineWidth=44;x.strokeStyle=grad(x,[160,300],[860,720]);x.lineJoin='round'
+ x.beginPath();x.moveTo(150,512);x.quadraticCurveTo(512,170,874,512);x.quadraticCurveTo(512,854,150,512);x.closePath();x.stroke()
+ x.fillStyle=grad(x,[400,400],[620,620]);x.beginPath();x.arc(512,512,118,0,7);x.fill();x.fillStyle='#0c0c0e';x.beginPath();x.arc(512,512,46,0,7);x.fill();return c}
+function ab(){const c=mk(),x=c.getContext('2d');const g=grad(x,[200,260],[820,760])
+ for(const [X,l] of [[196,'A'],[540,'B']]){x.fillStyle='#1d1d22';rr(x,X,250,288,524,56);x.fill();x.strokeStyle='#3a3a42';x.lineWidth=4;rr(x,X,250,288,524,56);x.stroke()
+  x.fillStyle=g;x.font='700 150px -apple-system,system-ui';x.textAlign='center';x.fillText(l,X+144,430)
+  x.fillStyle='#4b4b55';[500,560,620].forEach((y,i)=>{rr(x,X+44,y,200-i*36,26,13);x.fill()})}
+ return c}
+const scene=P.s||'key'
+const src=scene==='key'?key():scene==='eye'?eye():ab()
+const o=document.getElementById('out').getContext('2d')
+o.save();o.beginPath();o.roundRect(0,0,W,H,+(P.r||224));o.clip()
+const bg=o.createRadialGradient(512,0,0,512,0,1300);bg.addColorStop(0,'#26262c');bg.addColorStop(.55,'#111114');bg.addColorStop(1,'#08080a');o.fillStyle=bg;o.fillRect(0,0,W,H)
+// soft shadow
+o.save();o.filter='blur(26px)';o.globalAlpha=.55;o.translate(8,28);o.drawImage(src,0,0);o.restore()
+if(scene==='key'){o.drawImage(ramp(src,+(P.x0||400),+(P.x1||840),+(P.mb||46)),0,0)}
+else if(scene==='eye'){ // a frosted band across the eye: blur ramps in from both edges of the band
+ const band=mk(),bx=band.getContext('2d');bx.filter='blur(46px)';bx.drawImage(src,0,0);bx.filter='none'
+ const m=bx.createLinearGradient(0,380,0,644);[[0,0],[.22,1],[.78,1],[1,0]].forEach(([t,a])=>m.addColorStop(t,`rgba(0,0,0,${a})`))
+ bx.globalCompositeOperation='destination-in';bx.fillStyle=m;bx.fillRect(0,0,W,H)
+ const sharp=mk(),sx=sharp.getContext('2d');sx.drawImage(src,0,0);const m2=sx.createLinearGradient(0,380,0,644);[[0,1],[.22,0],[.78,0],[1,1]].forEach(([t,a])=>m2.addColorStop(t,`rgba(0,0,0,${a})`))
+ sx.globalCompositeOperation='destination-in';sx.fillStyle=m2;sx.fillRect(0,0,W,H)
+ o.drawImage(sharp,0,0);o.drawImage(band,0,0);o.save();o.beginPath();o.roundRect(118,392,788,240,120);o.fillStyle='rgba(255,255,255,.035)';o.fill();o.lineWidth=3;const rg=o.createLinearGradient(0,392,0,632);rg.addColorStop(0,'rgba(255,255,255,.28)');rg.addColorStop(.5,'rgba(255,255,255,.05)');rg.addColorStop(1,'rgba(255,255,255,.14)');o.strokeStyle=rg;o.stroke();o.restore()}
+else { // labels frosted, the rest sharp
+ const band=mk(),bx=band.getContext('2d');bx.filter='blur(26px)';bx.drawImage(src,0,0);bx.filter='none'
+ const m=bx.createLinearGradient(0,280,0,480);[[0,0],[.25,1],[.75,1],[1,0]].forEach(([t,a])=>m.addColorStop(t,`rgba(0,0,0,${a})`))
+ bx.globalCompositeOperation='destination-in';bx.fillStyle=m;bx.fillRect(0,0,W,H)
+ const sharp=mk(),sx=sharp.getContext('2d');sx.drawImage(src,0,0);const m2=sx.createLinearGradient(0,280,0,480);[[0,1],[.25,0],[.75,0],[1,1]].forEach(([t,a])=>m2.addColorStop(t,`rgba(0,0,0,${a})`))
+ sx.globalCompositeOperation='destination-in';sx.fillStyle=m2;sx.fillRect(0,0,W,H);o.drawImage(sharp,0,0);o.drawImage(band,0,0)}
+o.restore();document.title='done'
+</script></body></html>
