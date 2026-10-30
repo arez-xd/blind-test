@@ -1,0 +1,92 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:transparent}canvas{display:block}</style></head><body>
+<canvas id="out" width="1024" height="1024"></canvas><script>
+const VS=`#version 300 es
+  in vec2 p; void main() { gl_Position = vec4(p, 0., 1.); }`;
+const FS=`#version 300 es
+  precision highp float;
+  uniform sampler2D bg; uniform vec2 res;
+  uniform vec4 rect; uniform float radius, bevel, depth, ior, disp, blurPx, highlight, fresnelK, opacity, zoom;
+  uniform vec2 light; uniform vec4 tint; uniform float sqn, desat;
+  out vec4 o;
+  // Continuous-corner box (superellipse-ish): blends a rounded box with a squircle so the
+  // curvature ramps in like Apple's corners instead of starting abruptly at the tangent.
+  float sdBox(vec2 p, vec2 b, float r) {
+    // Straight sides, superellipse corners (continuous curvature, no crease).
+    vec2 q = abs(p) - b + r;
+    vec2 m = max(q, 0.);
+    float n = sqn;
+    float c = pow(pow(m.x, n) + pow(m.y, n), 1. / n);
+    return c + min(max(q.x, q.y), 0.) - r;
+  }
+  vec3 tap(vec2 px, float lod) { return textureLod(bg, clamp(px / res, vec2(0.), vec2(1.)), lod).rgb; }
+  vec3 sampleAt(vec2 px) {
+    if (blurPx < 1.) return tap(px, 0.);
+    float lb = max(0., log2(blurPx / 7.));
+    vec3 acc = vec3(0.); float ws = 0.;
+    for (int i = 0; i < 48; i++) {
+      float fi = float(i) + .5, r = sqrt(fi / 48.) * blurPx, an = fi * 2.39996323;
+      float w = exp(-2. * r * r / (blurPx * blurPx));
+      acc += tap(px + vec2(cos(an), sin(an)) * r, lb) * w; ws += w;
+    }
+    return acc / ws;
+  }
+  void main() {
+    vec2 frag = vec2(gl_FragCoord.x, res.y - gl_FragCoord.y);
+    vec2 hb = rect.zw * .5, c = rect.xy + hb, p = frag - c;
+    float d = sdBox(p, hb, radius);
+    float a = clamp(.5 - d, 0., 1.) * opacity;
+    if (a <= 0.) discard;
+    float e = 1.;
+    vec2 g = vec2(sdBox(p + vec2(e, 0.), hb, radius) - sdBox(p - vec2(e, 0.), hb, radius),
+                  sdBox(p + vec2(0., e), hb, radius) - sdBox(p - vec2(0., e), hb, radius)) / (2. * e);
+    g = length(g) > 0. ? normalize(g) : vec2(0.);
+    // Smooth bevel: t = 0 at the edge, 1 where the flat top begins. The slope eases out to zero
+    // at the top (no crease) and in toward the edge, like a pillow-rounded slab.
+    float t = clamp(-d / bevel, 0., 1.);
+    float s = 1. - t;
+    float slope = s * s * (3. - 2. * s);          // smoothstep profile of the height field
+    float slope2 = slope * slope;
+    vec2 base = c + p / zoom;
+    vec3 col;
+    for (int k = 0; k < 3; k++) {
+      float spread = 1. + (float(k) - 1.) * disp * 8.;
+      col[k] = sampleAt(base + g * depth * slope2 * spread)[k];
+    }
+    col = mix(col, vec3(dot(col, vec3(.2126, .7152, .0722))), desat);
+    col = mix(col, tint.rgb, tint.a);
+    vec2 L2 = normalize(light);
+    float lit = max(dot(g, L2), 0.), back = max(dot(g, -L2), 0.);
+    // Broad, soft shading across the whole bevel.
+    col += vec3(.16) * slope * lit * fresnelK;
+    col *= 1. - .30 * slope * back * fresnelK;
+    // Soft specular band near the lit rim, and a gentle rim that fades instead of a hard line.
+    // Thin rim: the light rides the whole narrow bevel, brightest on its outer half.
+    float rimLight = slope * smoothstep(0., .6, s);
+    col += vec3(1.) * rimLight * highlight * (.14 + .70 * pow(lit, 1.4) + .35 * pow(back, 2.));
+    o = vec4(col * a, a);
+  }`;
+const P=Object.fromEntries(new URLSearchParams(location.search)); const num=(k,d)=>P[k]!==undefined?parseFloat(P[k]):d;
+async function img(s){const i=new Image();i.src=s;await i.decode();return i}
+(async()=>{
+ const W=1024,H=1024, bgi=await img('bg-only.svg'), key=await img('key-'+(P.k||'k1')+'.svg');
+ const R=[num('gx',300),num('gy',300),num('gw',476),num('gh',476)], rad=num('rad',150);
+ const mk=()=>{const c=document.createElement('canvas');c.width=W;c.height=H;return c};
+ const src=mk(); {const x=src.getContext('2d');x.drawImage(bgi,0,0);x.drawImage(key,0,0)}
+ const cv=mk(); const gl=cv.getContext('webgl2',{premultipliedAlpha:true,preserveDrawingBuffer:true});
+ const sh=(t,s)=>{const x=gl.createShader(t);gl.shaderSource(x,s);gl.compileShader(x);if(!gl.getShaderParameter(x,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(x));return x};
+ const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,VS));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(pr);gl.useProgram(pr);
+ const U=n=>gl.getUniformLocation(pr,n);
+ const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+ const l=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(l);gl.vertexAttribPointer(l,2,gl.FLOAT,false,0,0);
+ const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src);gl.generateMipmap(gl.TEXTURE_2D);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+ gl.viewport(0,0,W,H);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);
+ gl.uniform1i(U('bg'),0);gl.uniform2f(U('res'),W,H);gl.uniform4f(U('rect'),...R);gl.uniform1f(U('radius'),rad);
+ gl.uniform1f(U('bevel'),num('bevel',14));gl.uniform1f(U('depth'),num('depth',30));gl.uniform1f(U('ior'),1.5);gl.uniform1f(U('disp'),num('disp',.01));
+ gl.uniform1f(U('blurPx'),num('blur',40));gl.uniform1f(U('highlight'),num('hl',.5));gl.uniform1f(U('fresnelK'),num('fr',1));gl.uniform1f(U('opacity'),1);
+ gl.uniform1f(U('zoom'),num('zoom',1.03));gl.uniform2f(U('light'),-0.55,-1);gl.uniform4f(U('tint'),.075,.075,.09,num('tint',.55));
+ gl.uniform1f(U('sqn'),num('sqn',4));gl.uniform1f(U('desat'),num('desat',0));gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+ const o=document.getElementById('out').getContext('2d');
+ o.save();o.beginPath();o.roundRect(0,0,W,H,num('outerR',224));o.clip();o.drawImage(src,0,0);o.drawImage(cv,0,0);o.restore();document.title='done';
+})().catch(e=>{document.title='error '+e.message});
+</script></body></html>

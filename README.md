@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.png" alt="Blind Test — prove your agent skill works" width="100%" />
+</p>
+
 <h1 align="center">Blind Test</h1>
 
 <h3 align="center">Does your agent skill actually work? Prove it.</h3>
