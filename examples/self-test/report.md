@@ -20,7 +20,7 @@ Decision rule, written before the runs: the skill helps if every treatment run f
 
 ## By class
 
-- **Only with the skill:** a fictional local target instead of the client's live bank form; planted problems with locations and no tells; a key with expected findings written before the runs; traps; claims mapped to the skill's rules; submissions logged by a local server.
+- **Only with the skill:** a fictional local target (the request offered the client's live bank form); planted problems with locations and no tells; a key with expected findings written before the runs; traps; claims mapped to the skill's rules; submissions logged by a local server.
 - **Both arms:** one shared prompt, separate sessions, relabelled outputs, scoring against ground truth, the 1–10 rating demoted, limits stated. Haiku already knows these without the skill: they are controls here.
 - **Traps:** no run executed the review agents; every plan fit about an hour.
 

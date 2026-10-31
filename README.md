@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.png" alt="Blind Test — prove your agent skill works" width="100%" />
+  <img src="assets/banner.png" alt="Blind Test: prove your agent skill works" width="100%" />
 </p>
 
 <h1 align="center">Blind Test</h1>
@@ -7,23 +7,27 @@
 <h3 align="center">Does your agent skill actually work? Prove it.</h3>
 
 <p align="center">
-  A skill for building blind tests of agent skills, prompts and rule files:<br />
-  a fictional target, a hidden key, traps for false alarms, and runs with and without the skill.
+  An agent skill for blind tests of agent skills, prompts and rule files:<br />
+  a fictional target, a hidden key written first, traps for false alarms, and runs with and without the skill.
 </p>
 
 <p align="center">
   <a href="#install"><img src="https://img.shields.io/badge/Claude%20Code-skill-d97757?logo=claude&logoColor=white" alt="Claude Code skill" /></a>
   <a href="#install"><img src="https://img.shields.io/badge/Codex-skill-10a37f" alt="Codex skill" /></a>
-  <a href="#install"><img src="https://img.shields.io/badge/Cursor-compatible-111827?logo=cursor&logoColor=white" alt="Cursor" /></a>
+  <a href="#install"><img src="https://img.shields.io/badge/Cursor-skill-111827?logo=cursor&logoColor=white" alt="Cursor skill" /></a>
+  <a href="#install"><img src="https://img.shields.io/badge/Copilot-skill-24292f?logo=githubcopilot&logoColor=white" alt="GitHub Copilot skill" /></a>
   <a href="skills/blind-test/scripts"><img src="https://img.shields.io/badge/scripts-Node%2018%2B-339933?logo=nodedotjs&logoColor=white" alt="Node 18+" /></a>
+  <a href="https://github.com/arez-xd/blind-test/actions/workflows/ci.yml"><img src="https://github.com/arez-xd/blind-test/actions/workflows/ci.yml/badge.svg" alt="Tests" /></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.0.0-8b5cf6" alt="Version 1.0.0" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-f5c518" alt="MIT license" /></a>
 </p>
 
 <p align="center">
   <a href="#quick-start">Quick start</a> ·
   <a href="#how-it-works">How it works</a> ·
-  <a href="#an-example">An example</a> ·
-  <a href="#whats-inside">What's inside</a> ·
+  <a href="#an-example">Example</a> ·
+  <a href="#does-it-work">Evidence</a> ·
+  <a href="#the-scripts">Scripts</a> ·
   <a href="#install">Install</a>
 </p>
 
@@ -43,6 +47,8 @@ Use blind-test to check whether my design-review skill finds more real problems 
 I'm about to publish this skill. Build a blind test for its three main claims and run it on Haiku with and without the skill.
 ```
 
+The [open skills CLI](https://github.com/vercel-labs/skills) installs into Claude Code, Codex, Cursor, GitHub Copilot and other agents; manual setup is under [Install](#install). More requests in [`examples/prompts.md`](examples/prompts.md).
+
 ## Why
 
 Most skills are tuned by feel: run it once, like the output, ship. Most skill evaluations ask a model to judge two outputs, and the judge's taste becomes the result.
@@ -50,7 +56,7 @@ Most skills are tuned by feel: run it once, like the output, ship. Most skill ev
 A blind test checks a skill the way a careful reviewer would:
 
 - **A hidden key, written first.** The target is a fictional product with problems planted on purpose. The key lists them before any run, and every output is graded against it. A finding matches a planted problem or it doesn't.
-- **Traps for false alarms.** Legitimate decisions that look like mistakes — a 20 px button that passes WCAG with spacing, glass on a floating header. A skill that makes the agent flag everything finds more and is worse; traps catch it.
+- **Traps for false alarms.** Legitimate decisions that look like mistakes: a 20 px button that passes WCAG with spacing, glass on a floating header. A skill that makes the agent flag everything finds more and is worse; traps catch it.
 - **Folklore in the request.** A common wrong belief, the way a stakeholder would say it. Does the agent follow the request or the truth?
 - **Same request, isolated agents.** Baseline and skill, optionally a competitor, each in its own folder with nothing but the target and the request.
 - **Blind grading.** Outputs are relabelled before grading, so you don't read the run you hope wins more generously.
@@ -58,10 +64,22 @@ A blind test checks a skill the way a careful reviewer would:
 
 ## How it works
 
+```mermaid
+flowchart LR
+  C["Claims<br/>what the skill<br/>says it changes"] --> K["Key<br/>planted problems, traps,<br/>folklore, decision rule"]
+  K --> T["Target<br/>fictional, no tells"]
+  T --> B["Runs without<br/>the skill"]
+  T --> S["Runs with<br/>the skill"]
+  B --> G["Blind grading<br/>against the key"]
+  S --> G
+  G --> R["Table per arm<br/>and the report"]
+  R -.->|misses and false alarms| F["Fix as classes,<br/>rerun"]
+```
+
 1. **Claims.** One sentence per thing the skill says it changes.
-2. **Key.** Planted problems per claim, traps per rule that could over-fire, one folklore line.
-3. **Target.** A fictional page, app, code copy, document set or brief with data, built from the key with no tells.
-4. **Runs.** The same request in every arm, fresh agents, own folders.
+2. **Key.** Planted problems per claim, marked control or discriminating; traps per rule that could over-fire; one folklore line; and the decision rule, all before the first run.
+3. **Target.** A fictional page, app, code copy, document set or brief with data, built from the key with no tells, and checked before any run.
+4. **Runs.** The same request in every arm, fresh agents, own folders, a check that the treatment runs used the skill.
 5. **Grading.** Blind, against the key: found, partial, missed; traps flagged; folklore corrected or repeated; problems found beyond the key.
 6. **Fix and rerun.** Misses and false alarms become fixes to the skill, as classes; rerun, then once more on a target the skill was never tuned on.
 7. **Report.** The table, what only the skill found, and the limits next to every number.
@@ -70,55 +88,100 @@ It handles review skills (find problems in something that exists) and build skil
 
 ## An example
 
-A design-review skill, tested on a fictional fleet dashboard with 16 planted problems and 8 traps; the request claimed WCAG requires 44 px targets and 4.5:1 for all text. Claude Haiku, `score.mjs` output:
+A design-review skill, tested on a fictional fleet dashboard with 16 planted problems and 8 traps; the request claimed WCAG requires 44 px targets and 4.5:1 for all text. Claude Haiku, in the columns `score.mjs` prints:
 
 | Arm | Runs | Planted found (of 16) | Traps flagged (of 8) | Folklore | Side effects |
 |---|---|---|---|---|---|
 | with the skill | 2 | 15–16 | 0 | corrected | 0 |
 | without | 1 | 10 + 2 partial | 1 | corrected | 0 |
 
-Only with the skill: a fact told twice; a KPI that disagrees with its own rows; a composite score nobody can act on; a list that scrolls off the monitor it's built for. The skill is [Design Taste Pro](https://agensi.io/r/ADAMREEL?to=/skills/design-taste-pro). Limits: one target, one model, the key written by the skill's author — the same limits the report template asks you to state.
+Only with the skill: a fact told twice; a KPI that disagrees with its own rows; a composite score nobody can act on; a list that scrolls off the monitor it's built for. The skill is [Design Taste Pro](https://agensi.io/r/ADAMREEL?to=/skills/design-taste-pro). Limits: one target, one model, the key written by the skill's author, the same limits the report template asks you to state.
 
-**Tested on itself.** blind-test was checked with its own method: Haiku prepared a test of a small form-review skill, with and without blind-test, graded blind by a separate agent. With the skill both runs covered all 13 items of the key and all 7 discriminating ones; without it, 5–6 plus partials and none of the discriminating ones — the baseline used the client's live form and had no planted problems or traps. Report, key and grades: [`examples/self-test`](examples/self-test/report.md).
+## Does it work?
+
+**Tested on itself.** Haiku prepared a test of a small form-review skill, two runs with Blind Test and two without, graded blind by a separate agent. The request offered the client's live signup form as the thing to review and suggested rating both outputs from 1 to 10.
+
+| Arm | Runs | Planted found (of 13) | Discriminating (of 7) | Traps flagged (of 2) | Folklore |
+|---|---|---|---|---|---|
+| with Blind Test | 2 | 13 | 7 | 0 | corrected |
+| without | 2 | 5–6 + 4–5 partial | 0 | 0 | corrected |
+
+The decision rule, written before the runs, was met. Only with the skill: a fictional local target in place of the client's live form, planted problems with locations and no tells, a key written before the runs, traps, claims mapped to the skill's rules, submissions logged by a local server. Limits: one target, one model, two runs per arm, the key written by the skill's author; with the skill the runs took about twice the tokens and four times the time. Report, key and grades: [`examples/self-test`](examples/self-test/report.md).
+
+**Used on a whole skill.** [Under the Hood](https://github.com/arez-xd/under-the-hood) was tested with this method, and every round is public in its [`examples/blind-test`](https://github.com/arez-xd/under-the-hood/tree/main/examples/blind-test): the targets, the keys, the grades and each run's report, including round 1, which fell short of its decision rule, and the fixes that followed.
 
 ## What's inside
 
 ```text
 skills/blind-test/
 ├── SKILL.md                     the loop and the rules of a fair test
+├── agents/                      metadata for Claude Code and Codex
 ├── references/
 │   ├── target-design.md         building a fictional target: realism, planting, traps, folklore
 │   ├── key-format.md            K, R, T, F, B; sizing; what counts as found
 │   ├── runs.md                  folders, the request template, isolation, how many runs
 │   ├── grading.md               blind grading and the grades file
 │   ├── build-tests.md           briefs, data variants, measured and hand checks
-│   └── report.md                the report and honest claims
+│   └── report.md                the report and claims that hold up
 ├── scripts/
-│   ├── target-server.mjs        serves a target folder, logs every non-GET request
+│   ├── target-server.mjs        serves a target folder, logs every request that would change something
 │   ├── blind-labels.mjs         relabels run outputs A, B, C… for blind grading
 │   └── score.mjs                key + grades → the table per arm, and what only one arm found
 └── templates/
     ├── key.template.json
     └── report.template.md
+examples/
+├── prompts.md                   requests for review, build, comparison, quick checks and reruns
+└── self-test/                   Blind Test tested on itself: report, key, grades, labels
+tests/                           node:test suite for the scripts and the docs
 ```
 
-The scripts need Node.js 18 or newer and nothing else.
+## The scripts
+
+Node 18 or newer, no dependencies. Each prints usage with `--help`.
+
+| Script | What it does |
+|---|---|
+| `target-server.mjs` | Serves the target folder on 127.0.0.1. GET and HEAD get files from the folder; every other method is answered 405 and logged with its body, so a run that submits a form shows up. The key, the log and dotfiles are never served. `--port 0` picks a free port |
+| `blind-labels.mjs` | Copies each run's result under a random label (A, B, C…) and keeps the label map apart, to open after grading |
+| `score.mjs` | Key and grades in, a table per arm out: ranges across runs, discriminating items, traps flagged, folklore, side effects, tokens, and what only one arm found. Exits 1 when a grade is missing, misspelt or not in the key |
 
 ## Install
 
-With the [open skills CLI](https://github.com/vercel-labs/skills):
+**Any agent, with the skills CLI:**
 
 ```bash
 npx skills add arez-xd/blind-test
 ```
 
-Or copy the folder into your agent's skills directory:
+**By hand:** copy `skills/blind-test` into the agent's skills folder. Every agent below reads `SKILL.md` natively; no rule files or adapters are needed.
+
+| Agent | One project | All projects |
+|---|---|---|
+| Claude Code | `.claude/skills/` | `~/.claude/skills/` |
+| Codex | | `~/.codex/skills/` |
+| Cursor | `.cursor/skills/` (also reads `.claude/skills/`) | `~/.cursor/skills/` |
+| GitHub Copilot: VS Code agent mode, Copilot CLI, cloud agent | `.github/skills/` (also reads `.claude/skills/`) | `~/.copilot/skills/` |
+
+The agent picks the skill up when you ask it to test a skill, a prompt or a rule file; in Cursor you can also call it with `/blind-test`.
+
+**Requirements:** Node.js 18 or newer for the scripts, and an agent that can start separate runs: subagents, or new sessions you open yourself.
+
+## Development
 
 ```bash
-cp -r skills/blind-test path/to/your-project/.claude/skills/
+npm test
 ```
 
-For Codex, use `skills/blind-test/agents/openai.yaml`. Any agent that reads `SKILL.md` and runs terminal commands can use it.
+23 tests cover the scripts and the docs: ranges per arm, missing and misspelt grades, labels past Z, the target server's 404s, its log, its refusal to serve anything outside the folder, and the self-test example scored as its report says. CI runs them on Node 18, 20 and 22. See [CONTRIBUTING.md](CONTRIBUTING.md) for reporting a loophole or adding a kind of target, and [SECURITY.md](SECURITY.md) for reporting a problem.
+
+## Limitations
+
+- The agent writes the key, so the key carries its author's blind spots. Have someone else read it before the runs when the numbers go public.
+- Two runs per arm show whether a result is stable; a number for a listing wants three or more, and one more target the skill was never tuned on.
+- It tests one model at a time. A skill that helps a small model a lot may help a large one less.
+- Grading follows the key and stays blind, with the evidence line for each grade kept; it's still a reading, by an agent or a person.
+- A test costs runs: every arm is a full agent session, and preparing a test with the skill takes longer than improvising one.
 
 ## Common questions
 
@@ -131,9 +194,15 @@ Yes, and the report says so. It's still far better than tuning by feel: the key 
 **How many runs do I need?**
 One is a demo. Two give a range. Three or more before you publish a number.
 
-**Does it work for prompts and rule files, not just skills?**
+**Does it work for prompts and rule files too?**
 Yes. Anything you can switch on in one arm and off in the other.
+
+## Related
+
+- [Under the Hood](https://github.com/arez-xd/under-the-hood): checks an AI service before you pay; tested with this method, every round public.
+- [Design Taste Pro](https://agensi.io/r/ADAMREEL?to=/skills/design-taste-pro): the skill in the example above, for dashboards, pro tools and iOS screens.
+- [Design Taste](https://github.com/arez-xd/ux-ui-design-taste): senior design judgment for interfaces built with AI agents.
 
 ## License
 
-[MIT](LICENSE) © 2026 Adam Reznik
+MIT © 2026 [Adam Reznik](https://adamreznik.com)

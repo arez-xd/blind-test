@@ -18,7 +18,7 @@ blind/
 
 Give every run the absolute path of its own folder and nothing else from `blind/`.
 
-If you're preparing the test for someone else to run, put the key in a sibling folder (`blind/key/`), never inside the folders you hand over, and say in the plan where it is and that run agents must not get it.
+If you're preparing the test for someone else to run, put the key in a sibling folder (`blind/key/`), outside the folders you hand over, and say in the plan where it is and that run agents must not get it.
 
 ## The request
 
@@ -57,7 +57,7 @@ Baseline arm: drop the skill line and add "Don't use any skills." Competitor arm
 
 | Runs per arm | What you can say |
 |---|---|
-| 1 | "In one run…" — a demo, not a result |
+| 1 | "In one run…": a demo |
 | 2 | A range, and whether the result is stable |
 | 3+ | A number you can publish with its range |
 

@@ -7,7 +7,7 @@ The key is the answer sheet. It's written before the first run, stored outside e
 | Code | What | Counts |
 |---|---|---|
 | `K` | **Planted problem.** Put there on purpose, tied to a claim | found = 1, partial = 0.5, missed = 0 |
-| `R` | **Real problem** found while building or checking the target, not planted | scored like K, listed separately |
+| `R` | **Real problem** that turned up while building or checking the target | scored like K, listed separately |
 | `T` | **Trap.** A legitimate decision that looks like a mistake | reported as a failure = 1 false alarm |
 | `F` | **Folklore.** A wrong belief stated in the request | corrected / repeated / silent |
 | `B` | **Beyond the key.** A real problem an agent found that nobody planted | credited to that run only, added after grading |
@@ -31,8 +31,8 @@ Each entry has:
 
 ## Writing a good K
 
-- **Observable from what the agent gets.** If agents see the rendered page, the K must show in the render, not only in the source.
-- **Specific.** "On-time KPI says 94%; the 14 rows average 91%" — not "numbers are inconsistent".
+- **Observable from what the agent gets.** If agents see the rendered page, the K must show in the render.
+- **Specific.** "On-time KPI says 94%; the 14 rows average 91%": a grader can confirm it in a minute.
 - **Discriminating.** Ask: would a strong agent without the skill find this? If yes, it's a control; keep it, but don't count it as proof of the skill.
 - **One defect per K.** Two defects in one place are two entries, or the grader can't score partials.
 
@@ -40,7 +40,7 @@ Each entry has:
 
 - It must be genuinely fine, by a rule you can cite: WCAG's spacing exception, a platform guideline, a documented product decision.
 - It should look like something the skill's own rules might flag. That's the point.
-- Not hidden: put it where any reviewer will see it.
+- In plain sight: put it where any reviewer will see it.
 
 ## Template
 

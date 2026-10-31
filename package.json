@@ -1,0 +1,14 @@
+{
+  "name": "blind-test",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An agent skill that proves whether a skill, prompt or rule file changes what an agent does: a hidden key written before any run, traps for false alarms, the same request with and without the skill, graded blind.",
+  "license": "MIT",
+  "author": "Adam Reznik",
+  "repository": { "type": "git", "url": "https://github.com/arez-xd/blind-test.git" },
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check": "for f in skills/blind-test/scripts/*.mjs; do node --check \"$f\" || exit 1; done"
+  }
+}

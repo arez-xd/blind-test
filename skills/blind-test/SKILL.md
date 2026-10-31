@@ -1,6 +1,6 @@
 ---
 name: blind-test
-description: Prove whether an agent skill, prompt, rule file or plugin actually changes what an agent does, with a blind test scored against a hidden key instead of a judge's opinion. Builds a fictional target with planted problems and traps (legitimate decisions that look like mistakes), writes the key before any run, runs the same request with and without the skill in isolated agents, grades the outputs without knowing which arm produced them, and reports what changed, what didn't and what the numbers can honestly claim. Use when someone asks "does my skill work", "is it better than the free ones", "prove it before I publish", wants numbers for a skill listing, or is about to tune a skill by feel.
+description: Prove whether an agent skill, prompt, rule file or plugin actually changes what an agent does, with a blind test scored against a hidden answer key. Builds a fictional target with planted problems and traps (legitimate decisions that look like mistakes), writes the key before any run, runs the same request with and without the skill in isolated agents, grades the outputs without knowing which arm produced them, and reports what changed, what didn't and what the numbers can honestly claim. Use when someone asks "does my skill work", "is it better than the free ones", "prove it before I publish", wants numbers for a skill listing, or is about to tune a skill by feel.
 summary: Blind tests for agent skills, scored against a hidden key, with traps that catch false alarms.
 version: 1.0.0
 tags: [agent-skills, evaluation, blind-test, ab-test, benchmarking, claude-code, prompts]
@@ -8,7 +8,7 @@ tags: [agent-skills, evaluation, blind-test, ab-test, benchmarking, claude-code,
 
 # Blind test
 
-A skill is a claim: "with me, the agent does X better." A blind test checks the claim the way a careful reviewer would. The agent gets a target and a request, never the answer. The answer — a key of planted problems and traps — is written before any run and kept where the agents can't see it. Every output is graded against the key, without knowing which arm produced it.
+A skill is a claim: "with me, the agent does X better." A blind test checks the claim the way a careful reviewer would. The agent gets a target and a request. The answer — a key of planted problems and traps — is written before any run and kept where the agents can't see it. Every output is graded against the key, without knowing which arm produced it.
 
 Two things make this different from asking a model to judge two outputs:
 
@@ -36,10 +36,10 @@ Find out, from the files first and the user second:
 ## 2. The rules of a fair test
 
 1. **The key is written before the first run** and never edited to match an output. A real problem found by an agent but not planted goes into the key as *found beyond the key*, credited to that run only.
-2. **Every claim has at least one planted problem that discriminates.** If the baseline would find it anyway, it doesn't test the skill — keep it as a control, not as proof.
+2. **Every claim has at least one planted problem that discriminates.** If the baseline would find it anyway, it doesn't test the skill: keep it as a control, which shows the target is fair.
 3. **Every claim that could cause false alarms has a trap.** A rule against uppercase labels needs a legitimate uppercase label; a rule about 24 px targets needs a 20 px button with spacing.
 4. **The target is fictional.** No real brand, product or person. Real names leak the answer from training data and drag third parties into a published test.
-5. **Agents see only the target, the request and (in the treatment arm) the skill.** Not the key, not the target's source when the test is about the rendered result, not other runs, not this skill's files.
+5. **Agents see only the target, the request and (in the treatment arm) the skill.** The key, other runs, this skill's files and, when the test is about the rendered result, the target's source stay out of their reach.
 6. **The request is identical, word for word**, in every arm. Only the skill changes. If the request contains folklore (a common wrong belief the skill corrects), it's the same folklore in every arm.
 7. **Nothing the agents do touches anything real.** Targets run on localhost; every state-changing request is logged (`scripts/target-server.mjs` writes `posts.log`), and a non-empty log is itself a finding.
 8. **Grading is blind.** Outputs are relabelled before grading (`scripts/blind-labels.mjs`); the grader learns which arm is which after the scores are written.

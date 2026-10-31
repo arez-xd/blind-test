@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security issue in the scripts
+    url: https://github.com/arez-xd/blind-test/security/advisories/new
+    about: Report privately; see SECURITY.md.

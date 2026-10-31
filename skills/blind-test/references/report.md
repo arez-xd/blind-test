@@ -15,7 +15,7 @@
 
 Numbers from a blind test end up in listings and posts. Keep them true:
 
-- **Say what it was:** "In a blind review of a fictional dashboard with 16 planted problems, the agent with the skill found 15–16; without it, 10." Not "finds 95% of problems".
+- **Say what it was:** "In a blind review of a fictional dashboard with 16 planted problems, the agent with the skill found 15–16; without it, 10." A bare "finds 95% of problems" hides the target, the runs and the model.
 - **Give the range and the run count.** One run is "in one run".
 - **Name the limits next to the number:** one target, one model, the key written by the skill's author. Readers trust a number more when the limits sit beside it.
 - **Report the traps.** "0 legitimate decisions reported as failures" is often the more convincing number.

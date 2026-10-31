@@ -7,16 +7,16 @@ The target is a small fictional product the agents work on: a page, a set of scr
 | The skill works on | The target is |
 |---|---|
 | Live pages or apps | A local server (`scripts/target-server.mjs`) serving one to five pages |
-| Source code | A small repo copy, builds and runs; defects planted in a copy, never in the original |
+| Source code | A small repo copy that builds and runs; defects planted in the copy, the original left untouched |
 | Documents (PRDs, contracts, copy) | A set of files with planted contradictions and gaps |
 | Builds from a brief | A brief and data files (`build-tests.md`) |
 
 ## Realism
 
-- **A fictional name and domain** that fits the skill: a fleet dashboard, an image studio, a home energy app. Not a real brand, not a lookalike.
+- **A fictional name and domain** that fits the skill: a fleet dashboard, an image studio, a home energy app. Invent it outright, with no real brand or lookalike behind it.
 - **Plausible data**: names, numbers, dates that hang together. Planted contradictions stand out only if the rest agrees.
-- **The normal amount of mess.** A target where every element is either perfect or planted is a puzzle, not a product. Ordinary choices, some good, some merely fine.
-- **Reuse your real experience, not your clients' material.** The kind of defect you've seen in real work, rebuilt in the fictional product.
+- **The normal amount of mess.** A target where every element is either perfect or planted reads as a puzzle. Ordinary choices, some good, some merely fine.
+- **Rebuild what you've seen in real work.** The kind of defect you've met with clients, recreated in the fictional product; their material stays out.
 
 ## Planting problems
 

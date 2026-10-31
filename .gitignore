@@ -1,4 +1,13 @@
 .DS_Store
+Thumbs.db
+
+# Local editor and agent state
+.vscode/
+.idea/
+.claude/settings.local.json
+
+# Dependencies, builds and test runs
 node_modules/
 dist/
-blind/
+/blind/
+*.log

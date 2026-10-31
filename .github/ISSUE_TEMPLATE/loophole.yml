@@ -1,0 +1,23 @@
+name: A loophole in the method
+description: A way a skill, a run or a grader can score better without doing better, or a test that let a weak skill through.
+labels: [method]
+body:
+  - type: textarea
+    id: setup
+    attributes:
+      label: The setup
+      description: The kind of skill, the target, the key and the request, in a few lines. Made-up names only.
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: How the score moved while the result stayed the same, or what the test missed.
+    validations:
+      required: true
+  - type: textarea
+    id: fix
+    attributes:
+      label: A rule or check that would close it
+      description: Where it belongs (the key, the runs, grading, the report, a script) and how a run would show it.

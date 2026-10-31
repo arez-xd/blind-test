@@ -1,0 +1,34 @@
+name: Bug in a script or an instruction
+description: A script counted wrong, crashed or served the wrong file, or an instruction sent the agent the wrong way.
+labels: [bug]
+body:
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where
+      options: [score.mjs, blind-labels.mjs, target-server.mjs, SKILL.md or a reference, A template]
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command or request
+      description: The exact command, or what you asked the agent. Remove anything private.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual result
+      description: What it should have shown, what it showed, and how you know (a hand count, the key, the file it served).
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Node version, OS, agent
+      placeholder: Node 22.11, macOS 15, Claude Code
+  - type: markdown
+    attributes:
+      value: A small made-up key and grades file that show the problem make the best report. Please leave out client material and anything private.

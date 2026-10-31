@@ -6,7 +6,7 @@ Grade every output against the key, without knowing which arm wrote it.
 
 1. `node scripts/blind-labels.mjs runs/ graded/` copies each run's result into `graded/` under a random label (`A`, `B`, `C`…) and writes the label → run map to `graded/.labels.json`.
 2. Grade only the files in `graded/`. Don't open `.labels.json` until every grade is written.
-3. If someone else grades, give them the key and `graded/` — not the run folders.
+3. If someone else grades, give them the key and `graded/` only; the run folders stay with you.
 
 Outputs often reveal their arm (a skill's vocabulary, its report format). Blindness is still worth it: it stops you from reading generously the run you hope wins.
 
@@ -22,7 +22,7 @@ Then sort every finding that matches no key item into one of three lists, after 
 
 - **beyond** — real problems nobody planted; credited to that run;
 - **false alarms** — reported as problems, but fine; counted next to the traps flagged;
-- **unverifiable** — can't be confirmed from the target; listed, not counted.
+- **unverifiable** — can't be confirmed from the target; listed apart from the score.
 
 ## The skill's own format
 
@@ -30,7 +30,7 @@ If the skill prescribes an output format (a table, severity labels, a fix per fi
 
 ## Evidence
 
-Write, per graded item, the line or quote from the output that justifies the grade. Disputes are settled by that line, not by memory.
+Write, per graded item, the line or quote from the output that justifies the grade. Disputes are settled by that line.
 
 ## Grades file
 

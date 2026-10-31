@@ -3,21 +3,25 @@
 // grades.json: { "<label or run>": { "K1": "found|partial|missed", "T1": "flagged|ok", "F1": "corrected|repeated|silent",
 //   "beyond": [...], "false_alarms": [...], "side_effects": 0, "tokens": 0 } }. Key items with "role": "discriminating"
 // get their own column. With --labels, labels become run names; runs named
-// <arm>-<n> are grouped by arm and shown as ranges.
+// <arm>-<n> are grouped by arm and shown as ranges. Exit 1 when a grade is missing, misspelt or not in the key.
 import { readFileSync, existsSync } from 'node:fs'
 
 const args = process.argv.slice(2)
 const li = args.indexOf('--labels'), labelsPath = li >= 0 ? args[li + 1] : null
 const [keyPath, gradesPath] = args.filter((a, i) => !a.startsWith('--') && (li < 0 || i !== li + 1))
-if (!keyPath || !gradesPath || args.includes('--help')) { console.log('usage: node score.mjs <key.json> <grades.json> [--labels .labels.json] [--json]'); process.exit(keyPath && gradesPath ? 0 : 2) }
+const usage = 'usage: node score.mjs <key.json> <grades.json> [--labels .labels.json] [--json]'
+if (args.includes('--help') || args.includes('-h')) { console.log(usage); process.exit(0) }
+if (!keyPath || !gradesPath) { console.error(usage); process.exit(2) }
 const read = p => { if (!existsSync(p)) { console.error(`not found: ${p}`); process.exit(2) } try { return JSON.parse(readFileSync(p, 'utf8')) } catch (e) { console.error(`not JSON: ${p} (${e.message})`); process.exit(2) } }
 const key = read(keyPath), grades = read(gradesPath), labels = labelsPath ? read(labelsPath) : {}
 
 const items = key.items || []
 const K = items.filter(i => i.type === 'K' || i.type === 'R'), T = items.filter(i => i.type === 'T'), F = items.filter(i => i.type === 'F')
-const unknown = new Set()
+const unknown = new Set(), odd = []
+const allowed = { K: ['found', 'partial', 'missed'], R: ['found', 'partial', 'missed'], T: ['flagged', 'ok'], F: ['corrected', 'repeated', 'silent'] }
 const runs = Object.entries(grades).map(([label, g]) => {
   for (const k of Object.keys(g)) if (!['beyond', 'false_alarms', 'unverifiable', 'side_effects', 'tokens', 'notes'].includes(k) && !items.some(i => i.id === k)) unknown.add(k)
+  for (const i of items) if (g[i.id] !== undefined && allowed[i.type] && !allowed[i.type].includes(g[i.id])) odd.push(`${label} ${i.id} "${g[i.id]}"`)
   const val = { found: 1, partial: 0.5, missed: 0 }
   const missing = [...K, ...T].filter(i => g[i.id] === undefined).map(i => i.id)
   return {
@@ -43,7 +47,13 @@ const rows = arms.map(a => {
     side: range(rs.map(r => r.side)), tokens: range(rs.map(r => r.tokens)), found: rs.map(r => r.found), trapIds: [...new Set(rs.flatMap(r => r.traps))] }
 })
 
-if (args.includes('--json')) { console.log(JSON.stringify({ planted: K.length, traps: T.length, runs, arms: rows.map(({ found, ...r }) => r) }, (k, v) => v instanceof Set ? [...v] : v, 2)); process.exit(0) }
+const gaps = runs.filter(r => r.missing.length)
+process.exitCode = gaps.length || odd.length || unknown.size ? 1 : 0
+if (args.includes('--json')) {
+  const problems = { not_graded: Object.fromEntries(gaps.map(r => [r.run, r.missing])), not_understood: odd, not_in_key: [...unknown] }
+  console.log(JSON.stringify({ planted: K.length, traps: T.length, runs, arms: rows.map(({ found, ...r }) => r), problems }, (k, v) => v instanceof Set ? [...v] : v, 2))
+  process.exit()
+}
 
 const dh = D.length ? ` Discriminating (of ${D.length}) |` : ''
 console.log(`| Arm | Runs | Planted found (of ${K.length}) |${dh} Traps flagged (of ${T.length}) | Other false alarms | Folklore | Beyond the key | Side effects | Tokens |`)
@@ -61,6 +71,7 @@ if (rows.length > 1) {
   const none = K.filter(i => rows.every(r => r.found.every(s => !s.has(i.id))))
   if (none.length) console.log(`Found by no run: ${none.map(i => i.id).join(', ')}`)
 }
-const gaps = runs.filter(r => r.missing.length)
-if (gaps.length) console.log(`\nNot graded: ${gaps.map(r => `${r.run} (${r.missing.join(', ')})`).join('; ')}`)
+if (gaps.length || odd.length || unknown.size) console.log('')
+if (gaps.length) console.log(`Not graded: ${gaps.map(r => `${r.run} (${r.missing.join(', ')})`).join('; ')}`)
+if (odd.length) console.log(`Grades not understood: ${odd.join('; ')}. K and R take found, partial or missed; T flagged or ok; F corrected, repeated or silent.`)
 if (unknown.size) console.log(`Ids not in the key: ${[...unknown].join(', ')}`)

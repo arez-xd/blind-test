@@ -10,7 +10,9 @@ import { randomInt } from 'node:crypto'
 const args = process.argv.slice(2)
 const fi = args.indexOf('--file'), file = fi >= 0 ? args[fi + 1] : null
 const [runs, out] = args.filter((a, i) => !a.startsWith('--') && (fi < 0 || i !== fi + 1))
-if (!runs || !out || args.includes('--help')) { console.log('usage: node blind-labels.mjs <runs-folder> <graded-folder> [--file review.md]'); process.exit(runs && out ? 0 : 2) }
+const usage = 'usage: node blind-labels.mjs <runs-folder> <graded-folder> [--file review.md]'
+if (args.includes('--help') || args.includes('-h')) { console.log(usage); process.exit(0) }
+if (!runs || !out) { console.error(usage); process.exit(2) }
 if (!existsSync(runs)) { console.error(`not found: ${runs}`); process.exit(2) }
 if (existsSync(join(out, '.labels.json'))) { console.error(`${out} already has .labels.json; use a new folder`); process.exit(2) }
 
@@ -22,16 +24,18 @@ const pick = dir => {
 const found = [], skipped = []
 for (const d of readdirSync(runs)) {
   const dir = join(runs, d)
-  if (!statSync(dir).isDirectory()) continue
+  if (d.startsWith('.') || !statSync(dir).isDirectory()) continue
   const r = pick(dir)
   r ? found.push([d, r]) : skipped.push(d)
 }
 if (!found.length) { console.error('no results found; pass --file <name> if runs hold several files'); process.exit(1) }
 for (let i = found.length - 1; i > 0; i--) { const j = randomInt(i + 1); [found[i], found[j]] = [found[j], found[i]] }
 mkdirSync(out, { recursive: true })
+// A, B … Z, then AA, AB …
+const name = n => (n >= 26 ? name(Math.floor(n / 26) - 1) : '') + String.fromCharCode(65 + (n % 26))
 const map = {}
 found.forEach(([run, src], i) => {
-  const label = String.fromCharCode(65 + i)
+  const label = name(i)
   copyFileSync(src, join(out, label + extname(src)))
   map[label] = run
 })
