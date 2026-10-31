@@ -32,6 +32,12 @@ Compare my skill with this free one on the same target: a third arm in its own s
 We added a rule file for code reviews. Test whether reviews with it catch more of the problems we care about, and whether it makes the agent flag things that are fine.
 ```
 
+## An MCP server
+
+```text
+We're adding an MCP server with our design system. Test blind whether the agent's screens follow the system better with it connected, and what it costs in tokens.
+```
+
 ## A quick check
 
 ```text

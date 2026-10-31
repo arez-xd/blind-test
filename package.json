@@ -2,7 +2,7 @@
   "name": "blind-test",
   "version": "1.0.0",
   "private": true,
-  "description": "An agent skill that proves whether a skill, prompt or rule file changes what an agent does: a hidden key written before any run, traps for false alarms, the same request with and without the skill, graded blind.",
+  "description": "An agent skill that proves whether a skill, prompt, rule file or MCP server changes what an agent does: a hidden key written before any run, traps for false alarms, the same request with and without it, graded blind.",
   "license": "MIT",
   "author": "Adam Reznik",
   "repository": { "type": "git", "url": "https://github.com/arez-xd/blind-test.git" },

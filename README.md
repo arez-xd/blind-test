@@ -1,14 +1,14 @@
 <p align="center">
-  <img src="assets/banner.png" alt="Blind Test: prove your agent skill works" width="100%" />
+  <img src="assets/banner.png" alt="Blind Test: prove what helps your agent" width="100%" />
 </p>
 
 <h1 align="center">Blind Test</h1>
 
-<h3 align="center">Does your agent skill actually work? Prove it.</h3>
+<h3 align="center">Does your skill, prompt or MCP server actually help? Prove it.</h3>
 
 <p align="center">
-  An agent skill for blind tests of agent skills, prompts and rule files:<br />
-  a fictional target, a hidden key written first, traps for false alarms, and runs with and without the skill.
+  An agent skill for blind tests of anything that changes what an agent does: skills, prompts, rule files, MCP servers.<br />
+  A fictional target, a hidden key written first, traps for false alarms, and runs with and without the change.
 </p>
 
 <p align="center">
@@ -47,11 +47,15 @@ Use blind-test to check whether my design-review skill finds more real problems 
 I'm about to publish this skill. Build a blind test for its three main claims and run it on Haiku with and without the skill.
 ```
 
+```text
+We rewrote our CLAUDE.md. Check blind whether code reviews with the new one catch more real problems than with the old one.
+```
+
 The [open skills CLI](https://github.com/vercel-labs/skills) installs into Claude Code, Codex, Cursor, GitHub Copilot and other agents; manual setup is under [Install](#install). More requests in [`examples/prompts.md`](examples/prompts.md).
 
 ## Why
 
-Most skills are tuned by feel: run it once, like the output, ship. Most skill evaluations ask a model to judge two outputs, and the judge's taste becomes the result.
+Most skills and prompts are tuned by feel: run it once, like the output, ship. Most skill evaluations ask a model to judge two outputs, and the judge's taste becomes the result.
 
 A blind test checks a skill the way a careful reviewer would:
 
@@ -194,8 +198,8 @@ Yes, and the report says so. It's still far better than tuning by feel: the key 
 **How many runs do I need?**
 One is a demo. Two give a range. Three or more before you publish a number.
 
-**Does it work for prompts and rule files too?**
-Yes. Anything you can switch on in one arm and off in the other.
+**Does it work beyond skills?**
+Yes: system prompts and rule files, plugins and MCP servers, a context file, a new version against the old one, two models on the same instructions. Anything you can switch on in one arm and off in the other.
 
 ## Related
 
