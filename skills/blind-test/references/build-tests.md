@@ -31,10 +31,13 @@ Split them by how they're verified, and write them before the runs:
 
 Avoid checks every arm passes: they don't discriminate and they pad the score.
 
+For a measured check on a render, capture the original twice with the same command first: the difference between the two captures is the noise floor, and a build differs only where it goes above it. Give every capture a fresh browser profile: with one profile shared across captures, a page captured later can be caught at another moment of its animation.
+
 ## Same conditions
 
 - Same brief, same data, same project template, same tools — including a simulator or browser if any arm gets one. A skill whose loop says "render and look" can't be judged on a run that wasn't allowed to render.
 - If the brief invites a review round ("review what you built, then improve it"), it's in every arm's brief.
+- **Served code is part of the target.** In a rebuild or clone test, the page's code reaches every run: a minified bundle still carries shader sources, constants and timings, and a run without the skill can read and copy them. Decide before the runs whether reading the code is part of the task, say so in the request for every arm, and name it in the limits.
 - Screenshots of every arm at the same viewport, theme and data, for the side-by-side.
 
 ## Report
