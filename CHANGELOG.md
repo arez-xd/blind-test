@@ -14,6 +14,9 @@ All notable changes to this skill. The format follows [Keep a Changelog](https:/
 - The description names both levels, and "is it any good" among the requests it answers.
 - The report and its template open with the level; calibration and the rewrite are marked as steps of the full test; the hand-over starts with the level.
 - `examples/prompts.md` has a plain "is it any good?" request.
+- Isolation names shared tools: a browser pane or an MCP server the environment offers is one instance for every run at once, so runs launched together see each other's tabs. Each run gets its own headless browser, or those arms run one at a time.
+- Build tests: the page's served code is part of the target, since a minified bundle still carries shader sources and constants a run without the skill can read; the request says whether reading it is part of the task. A measured check on a render starts from the original captured twice, the noise floor, and every capture gets a fresh browser profile.
+- Writes outside a run folder are checked in the run's tool log and on disk, with the agents it started included.
 
 ### Fixed
 
