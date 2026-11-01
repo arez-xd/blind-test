@@ -1,9 +1,9 @@
 ---
 name: blind-test
-description: Prove whether an agent skill, prompt, rule file or plugin actually changes what an agent does, with a blind test scored against a hidden answer key. Builds a fictional target with planted problems and traps (legitimate decisions that look like mistakes), writes the key before any run, runs the same request with and without the skill in isolated agents, grades the outputs without knowing which arm produced them, and reports what changed, what didn't and what the numbers can honestly claim. Two levels: a quick check by default, and the full test with calibration and normalization when the numbers go public. Use when someone asks "does my skill work", "is it any good", "is it better than the free ones", "prove it before I publish", wants numbers for a skill listing, or is about to tune a skill by feel.
+description: Prove whether an agent skill, harness, prompt, rule file or plugin actually changes what an agent does, with a blind test scored against a hidden answer key. Builds a fictional target with planted problems and traps (legitimate decisions that look like mistakes), writes the key before any run, runs the same request with and without the skill in isolated agents, grades the outputs without knowing which arm produced them, and reports what changed, what didn't and what the numbers can honestly claim. Two levels: a quick check by default, and the full test with calibration and normalization when the numbers go public. Use when someone asks "does my skill work", "is it any good", "is it better than the free ones", "prove it before I publish", wants numbers for a skill listing, or is about to tune a skill by feel.
 summary: Blind tests for agent skills, scored against a hidden key, with traps that catch false alarms.
-version: 1.2.0
-tags: [agent-skills, evaluation, blind-test, ab-test, benchmarking, claude-code, prompts]
+version: 1.3.0
+tags: [agent-skills, evaluation, blind-test, ab-test, benchmarking, claude-code, prompts, agent-harness]
 ---
 
 # Blind test
@@ -21,7 +21,7 @@ Find out, from the files first and the user second:
 
 1. **The claim.** One sentence per thing the skill says it changes: "finds data that disagrees with itself", "doesn't report 44 px as a WCAG AA failure", "builds lists that survive ten times the items". No claim, no test: a test without claims measures noise.
 2. **The test type.** *Review* (the agent finds problems in something that exists) or *Build* (the agent makes something from a brief). Many skills need both. Read `references/build-tests.md` for Build.
-3. **The arms.** Baseline (same agent, no skill) always. Treatment (with the skill). Optionally a competitor skill, installed in a sandbox (`references/runs.md`).
+3. **The arms.** Baseline (same agent, no skill) always. Treatment (with the skill). Optionally a competitor skill, installed in a sandbox (`references/runs.md`). When the change is the harness itself, the arms are one harness with and without a setting, or two harnesses on the same model (`references/runs.md`, Harnesses).
 4. **The model.** Start with the smallest model the skill is meant for: a skill's effect shows most where the model is weakest, and runs are cheap. Confirm on a larger one only if the result is borderline.
 5. **The level** (`references/levels.md`). A *quick check* shows a direction: one target, 6–8 K, 2–3 T, the key and the decision rule before any run, two runs per arm, one blind grader, about five agents. The *full test* adds calibration (two baseline pilot runs, four when the target needs its revision), the rewrite of every output into one format before grading and, before a public number, three or more runs per arm; in our runs on Haiku it started 13–16 agents and took 90–110 minutes. Take the full test when the request asks for proof or for numbers that go public, and the quick check when it asks whether a skill is any good. Otherwise name both with their cost and ask. If you can't ask (you run as a subagent, or were told to go ahead without questions), take the quick check and say so in the first line of the report. At either level, one run per arm is a demo, two show the spread, three or more come before a published number; record tokens per run.
 
