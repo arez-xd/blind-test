@@ -38,7 +38,7 @@ Rules:
 - Don't create tasks, tickets, pull requests, reminders or messages, and don't hand work to other agents: the result file is the whole output.
 - Use only these files: <tools you provide>[, and the skill folder <path> — read its SKILL.md first and follow it].
   Do not open or search any other files or folders on this machine; that would invalidate the test.
-- Write your result to <run folder>/<file>.
+- Write your result to <run folder>/<file>, and keep every file you create there, scratch files and logs included.
 
 When done, reply with the path of the result and a five-line summary.
 ```
@@ -49,6 +49,7 @@ Baseline arm: drop the skill line and add "Don't use any skills." Competitor arm
 
 - **Fresh agent per run.** Never continue a run's conversation into another arm.
 - **No shared paths.** The key, other runs, the target's source (when the test is about the rendered result) and this skill stay outside the folders a run is given.
+- **Scratch inside the run folder.** An agent whose environment tells it to keep temporary files in a scratchpad or in `/tmp` will do so in the middle of a run, and so will you while probing the target. The request names the run folder as the only place to write; your own probes, stderr captures and checks go inside `blind/`.
 - **Competitor skills in a sandbox.** Their own folder, their own `HOME` and cache, no hooks installed into the real environment. Check what their scripts download before running them; verify checksums when the project publishes them.
 - **Same model, same tools, same viewport, same time limits** in every arm.
 - **A clean baseline.** Skills, rules or plugins installed in the environment load into the baseline too. List what's installed and disable what overlaps with the skill under test, or record it as a limit.
@@ -67,4 +68,4 @@ Run the arms interleaved (baseline-1, treatment-1, baseline-2…) so a change in
 
 ## Record per run
 
-Model, date, tokens, wall time, tool calls if available, the posts.log line count (or the diff of a code copy), anything the run created outside its folder (a queued task, a ticket, a message — withdraw it and count it as a side effect), and anything the agent says it couldn't do.
+Model, date, tokens, wall time, tool calls if available, the posts.log line count (or the diff of a code copy), anything the run created outside its folder (a queued task, a ticket, a message, a scratch file in `/tmp` — withdraw or remove it and count it as a side effect), and anything the agent says it couldn't do.

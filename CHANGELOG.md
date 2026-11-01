@@ -15,6 +15,10 @@ All notable changes to this skill. The format follows [Keep a Changelog](https:/
 - The report and its template open with the level; calibration and the rewrite are marked as steps of the full test; the hand-over starts with the level.
 - `examples/prompts.md` has a plain "is it any good?" request.
 
+### Fixed
+
+- Scratch files stay inside the test folder. In the self-test, nested reviewers kept probes in a session scratchpad and in `/tmp`, and each orchestrating run wrote a stderr capture or an empty file to `/tmp`. The run request now names the run folder as the only place to write, scratch files and logs included, and a file left outside it counts as a side effect.
+
 ## [1.1.0] - 2026-11-01
 
 ### Added

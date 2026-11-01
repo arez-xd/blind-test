@@ -18,7 +18,7 @@ Full test. A quick check skips the rewrite, grades the stripped and relabelled o
 A skill shapes its output: its section names, its severity scale, marks like "verified". A grader who recognises the format knows the arm. Before grading, rewrite every labelled output into one neutral form: one agent per label, each in its own folder with that one file, so no rewriter sees another output.
 
 ```text
-Your working folder is <folder>. Read only files inside it. Don't create tasks, tickets, pull requests, reminders or messages, and don't hand work to other agents.
+Your working folder is <folder>. Read and write only inside it, temporary files included. Don't create tasks, tickets, pull requests, reminders or messages, and don't hand work to other agents.
 
 <LABEL>.md in the folder is one output of a test. Rewrite it as <LABEL>.normalized.md in the same folder, in a neutral form, so that a grader can compare outputs written in different styles. Keep the content; change only the form.
 
