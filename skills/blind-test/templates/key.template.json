@@ -13,6 +13,7 @@
       "type": "K",
       "claim": "C1",
       "class": "<defect class>",
+      "role": "<control | discriminating: a guess, then what the pilots found>",
       "what": "<where it is and what is wrong>",
       "evidence": "<value, selector, line>",
       "found": "<what an output must say>",

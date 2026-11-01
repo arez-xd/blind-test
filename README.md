@@ -18,7 +18,7 @@
   <a href="#install"><img src="https://img.shields.io/badge/Copilot-skill-24292f?logo=githubcopilot&logoColor=white" alt="GitHub Copilot skill" /></a>
   <a href="skills/blind-test/scripts"><img src="https://img.shields.io/badge/scripts-Node%2018%2B-339933?logo=nodedotjs&logoColor=white" alt="Node 18+" /></a>
   <a href="https://github.com/arez-xd/blind-test/actions/workflows/ci.yml"><img src="https://github.com/arez-xd/blind-test/actions/workflows/ci.yml/badge.svg" alt="Tests" /></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.0.0-8b5cf6" alt="Version 1.0.0" /></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.1.0-8b5cf6" alt="Version 1.1.0" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-f5c518" alt="MIT license" /></a>
 </p>
 
@@ -63,7 +63,8 @@ A blind test checks a skill the way a careful reviewer would:
 - **Traps for false alarms.** Legitimate decisions that look like mistakes: a 20 px button that passes WCAG with spacing, glass on a floating header. A skill that makes the agent flag everything finds more and is worse; traps catch it.
 - **Folklore in the request.** A common wrong belief, the way a stakeholder would say it. Does the agent follow the request or the truth?
 - **Same request, isolated agents.** Baseline and skill, optionally a competitor, each in its own folder with nothing but the target and the request.
-- **Blind grading.** Outputs are relabelled before grading, so you don't read the run you hope wins more generously.
+- **Calibration.** Two pilot runs without the skill show which planted problems the baseline already finds; those become controls, and the evidence comes from the rest.
+- **Blind grading.** Outputs are relabelled and rewritten into one neutral format before grading, so you don't read the run you hope wins more generously, and a skill's format doesn't give its arm away.
 - **Side effects logged.** The target server records every state-changing request; a review that submits a form shows up.
 
 ## How it works
@@ -72,10 +73,12 @@ A blind test checks a skill the way a careful reviewer would:
 flowchart LR
   C["Claims<br/>what the skill<br/>says it changes"] --> K["Key<br/>planted problems, traps,<br/>folklore, decision rule"]
   K --> T["Target<br/>fictional, no tells"]
-  T --> B["Runs without<br/>the skill"]
-  T --> S["Runs with<br/>the skill"]
-  B --> G["Blind grading<br/>against the key"]
-  S --> G
+  T --> P["Calibration<br/>pilots without the skill,<br/>key frozen"]
+  P --> B["Runs without<br/>the skill"]
+  P --> S["Runs with<br/>the skill"]
+  B --> N["Relabelled and<br/>normalized"]
+  S --> N
+  N --> G["Blind grading<br/>against the key"]
   G --> R["Table per arm<br/>and the report"]
   R -.->|misses and false alarms| F["Fix as classes,<br/>rerun"]
 ```
@@ -83,10 +86,11 @@ flowchart LR
 1. **Claims.** One sentence per thing the skill says it changes.
 2. **Key.** Planted problems per claim, marked control or discriminating; traps per rule that could over-fire; one folklore line; and the decision rule, all before the first run.
 3. **Target.** A fictional page, app, code copy, document set or brief with data, built from the key with no tells, and checked before any run.
-4. **Runs.** The same request in every arm, fresh agents, own folders, a check that the treatment runs used the skill.
-5. **Grading.** Blind, against the key: found, partial, missed; traps flagged; folklore corrected or repeated; problems found beyond the key.
-6. **Fix and rerun.** Misses and false alarms become fixes to the skill, as classes; rerun, then once more on a target the skill was never tuned on.
-7. **Report.** The table, what only the skill found, and the limits next to every number.
+4. **Calibration.** Two pilot runs without the skill, graded against the key: what they find becomes a control. A target that's too easy gets one revision; then the key is frozen.
+5. **Runs.** The same request in every arm, fresh agents, own folders, a check that the treatment runs used the skill.
+6. **Grading.** Run paths stripped, outputs relabelled and rewritten into one neutral format, then graded blind against the key: found, partial, missed; traps flagged; folklore corrected or repeated; problems found beyond the key.
+7. **Fix and rerun.** Misses and false alarms become fixes to the skill, as classes; rerun, then once more on a target the skill was never tuned on.
+8. **Report.** The table, what only the skill found, and the limits next to every number.
 
 It handles review skills (find problems in something that exists) and build skills (make something from a brief, checked against data at ten times the size, empty states and awkward names).
 
@@ -123,13 +127,15 @@ skills/blind-test/
 ├── references/
 │   ├── target-design.md         building a fictional target: realism, planting, traps, folklore
 │   ├── key-format.md            K, R, T, F, B; sizing; what counts as found
+│   ├── calibration.md           pilot runs that settle controls and discriminating items; one revision; a frozen key
 │   ├── runs.md                  folders, the request template, isolation, how many runs
-│   ├── grading.md               blind grading and the grades file
+│   ├── grading.md               stripping, relabelling, normalizing, blind grading and the grades file
 │   ├── build-tests.md           briefs, data variants, measured and hand checks
 │   └── report.md                the report and claims that hold up
 ├── scripts/
 │   ├── target-server.mjs        serves a target folder, logs every request that would change something
 │   ├── blind-labels.mjs         relabels run outputs A, B, C… for blind grading
+│   ├── refcheck.mjs             checks a normalized output kept every file:line of the original
 │   └── score.mjs                key + grades → the table per arm, and what only one arm found
 └── templates/
     ├── key.template.json
@@ -148,6 +154,7 @@ Node 18 or newer, no dependencies. Each prints usage with `--help`.
 |---|---|
 | `target-server.mjs` | Serves the target folder on 127.0.0.1. GET and HEAD get files from the folder; every other method is answered 405 and logged with its body, so a run that submits a form shows up. The key, the log and dotfiles are never served. `--port 0` picks a free port |
 | `blind-labels.mjs` | Copies each run's result under a random label (A, B, C…) and keeps the label map apart, to open after grading |
+| `refcheck.mjs` | Compares each output with its normalized rewrite and lists every `file:line` the rewrite lost, with the heading it sat under; two files or two folders paired by label. Exits 1 when a place is missing |
 | `score.mjs` | Key and grades in, a table per arm out: ranges across runs, discriminating items, traps flagged, folklore, side effects, tokens, and what only one arm found. Exits 1 when a grade is missing, misspelt or not in the key |
 
 ## Install
@@ -177,7 +184,7 @@ The agent picks the skill up when you ask it to test a skill, a prompt or a rule
 npm test
 ```
 
-23 tests cover the scripts and the docs: ranges per arm, missing and misspelt grades, labels past Z, the target server's 404s, its log, its refusal to serve anything outside the folder, and the self-test example scored as its report says. CI runs them on Node 18, 20 and 22. See [CONTRIBUTING.md](CONTRIBUTING.md) for reporting a loophole or adding a kind of target, and [SECURITY.md](SECURITY.md) for reporting a problem.
+27 tests cover the scripts and the docs: ranges per arm, missing and misspelt grades, labels past Z, the target server's 404s, its log, its refusal to serve anything outside the folder, a rewrite that lost a place, and the self-test example scored as its report says. CI runs them on Node 18, 20 and 22. See [CONTRIBUTING.md](CONTRIBUTING.md) for reporting a loophole or adding a kind of target, and [SECURITY.md](SECURITY.md) for reporting a problem.
 
 ## Limitations
 
@@ -185,7 +192,7 @@ npm test
 - Two runs per arm show whether a result is stable; a number for a listing wants three or more, and one more target the skill was never tuned on.
 - It tests one model at a time. A skill that helps a small model a lot may help a large one less.
 - Grading follows the key and stays blind, with the evidence line for each grade kept; it's still a reading, by an agent or a person.
-- A test costs runs: every arm is a full agent session, and preparing a test with the skill takes longer than improvising one.
+- A test costs runs: every arm is a full agent session, calibration adds two pilot runs (four with a revision), and preparing a test with the skill takes longer than improvising one.
 
 ## Common questions
 

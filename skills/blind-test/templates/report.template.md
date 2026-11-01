@@ -9,6 +9,10 @@
 - **Request:** "<word for word, folklore included>"
 - **Arms:** baseline (no skill), treatment (<skill> <version>)[, competitor (<name> <version>)]
 
+## Calibration
+
+<two pilot runs of the baseline: what they found; N controls, N discriminating; the revision of the target, if any; the key frozen at sha256 <first 8>…<last 4>>
+
 ## Result
 
 <paste the table from score.mjs>
@@ -27,6 +31,10 @@
 ## What changed in the skill
 
 <fixes, written as classes> → rerun: <new numbers>
+
+## Grading
+
+<run paths stripped, outputs relabelled and rewritten into one format; places lost in the rewrites, if any, and where they sat; who graded>
 
 ## Limits
 

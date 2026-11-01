@@ -2,6 +2,22 @@
 
 All notable changes to this skill. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2026-11-01
+
+### Added
+
+- **Calibration** (`references/calibration.md`, step 4 of the loop). Two pilot runs of the baseline, graded against the key, decide which planted problems are controls and which discriminate. A target the pilots find too easy gets one revision where their attention was thin, and the key is then frozen by its sha256. It came out of two code-review rounds: in one, the baseline found all 12 items predicted as discriminating; in the next, two pilots without the skill found 16 of 17 planted problems before any counted run.
+- **Normalization before blind grading** (`references/grading.md`). Run paths are stripped before relabelling, and each output is rewritten into one neutral format by its own agent, so a skill's format doesn't name its arm. The rewriter's prompt is included.
+- **`refcheck.mjs`**: checks that each rewrite kept every `file:line` of its original, and prints the heading of any place it lost.
+- **Grading in pieces**: one output at a time, one grades file per label, merged at the end.
+
+### Changed
+
+- The loop has nine steps: calibration after the target check; stripping, relabelling and normalizing inside blind grading.
+- The grader's copy of the key leaves out `role` and anything that describes the arms.
+- The key format and the key template carry `role`; the report template has Calibration and Grading sections; the hand-over lists the calibration.
+- Tests: 27 `node:test` cases, four of them for `refcheck.mjs`.
+
 ## [1.0.0] - 2026-11-01
 
 First public release.

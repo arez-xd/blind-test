@@ -14,6 +14,8 @@ blind/
       skill/               ← a copy of the skill, so the run can't read the original's history
     competitor-1/
       skill/               ← competitor skill, its own HOME and cache if it installs anything
+  calibration/
+    pilot-1/               ← baseline pilots, same prompt as baseline-1; graded, never counted
 ```
 
 Give every run the absolute path of its own folder and nothing else from `blind/`.

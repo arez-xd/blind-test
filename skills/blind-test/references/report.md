@@ -5,11 +5,12 @@
 `templates/report.template.md` has the sections:
 
 1. **What was tested.** The claims, the target in one line, the request (with its folklore), the arms, the model, runs per arm, the date.
-2. **Result table.** Per arm: planted found (with partials), traps flagged, folklore, side effects, tokens. Ranges when there's more than one run.
-3. **What only the skill found, what only the baseline found, what neither did.** By class, with one example each.
-4. **Beyond the key.** Real problems agents found that nobody planted.
-5. **What changed in the skill** after the first round, and the rerun result.
-6. **Limits.**
+2. **Calibration.** What the pilots found, how many items stayed discriminating, any revision of the target, and the key's sha256 when it was frozen.
+3. **Result table.** Per arm: planted found (with partials), traps flagged, folklore, side effects, tokens. Ranges when there's more than one run.
+4. **What only the skill found, what only the baseline found, what neither did.** By class, with one example each.
+5. **Beyond the key.** Real problems agents found that nobody planted.
+6. **What changed in the skill** after the first round, and the rerun result.
+7. **Limits.**
 
 ## Honest claims
 
@@ -24,4 +25,4 @@ Numbers from a blind test end up in listings and posts. Keep them true:
 
 ## Keep for next time
 
-The target, the key, the request, the run prompts, the grades and the labels map, in one folder. The next version of the skill reruns the same test, and the change is a fair comparison.
+The target, the key, the request, the run prompts, the pilots and their grades, the normalized outputs, the grades and the labels map, in one folder. The next version of the skill reruns the same test, and the change is a fair comparison.

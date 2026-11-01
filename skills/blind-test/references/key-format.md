@@ -26,7 +26,8 @@ Each entry has:
 - At least one K per claim, ideally two (one obvious, one subtle).
 - 1 T per rule that could over-fire. 6–8 T for a large skill.
 - One folklore line in the request, at most two.
-- Mark each K `control` (a strong baseline should find it) or `discriminating`. Only discriminating items are evidence for the skill; controls show the target is fair.
+- Mark each K `control` (a strong baseline should find it) or `discriminating`. Only discriminating items are evidence for the skill; controls show the target is fair. Write the mark as `"role"`: your guess first, then what two pilot runs of the baseline actually found (`references/calibration.md`). `score.mjs` counts the Discriminating column from it.
+- After calibration the key is frozen: its sha256 goes next to the decision rule, and nothing in it changes during the runs.
 - A clean control (the same target without the planted problems) is worth it for review skills that tend to over-report: findings on the control are false alarms by definition.
 
 ## Writing a good K
@@ -54,7 +55,7 @@ Each entry has:
     { "id": "C1", "text": "Numbers on a screen come from one source and agree" }
   ],
   "items": [
-    { "id": "K1", "type": "K", "claim": "C1", "class": "one number, two sources",
+    { "id": "K1", "type": "K", "claim": "C1", "class": "one number, two sources", "role": "discriminating",
       "what": "On-time KPI shows 94%; the 14 rows average 91%",
       "evidence": "mean of the On-time column", "found": "names both values or says the KPI disagrees with the rows",
       "partial": "says the KPI may be wrong without the rows" },
