@@ -32,6 +32,12 @@ Compare my skill with this free one on the same target: a third arm in its own s
 We added a rule file for code reviews. Test whether reviews with it catch more of the problems we care about, and whether it makes the agent flag things that are fine.
 ```
 
+## An agent harness
+
+```text
+We run code reviews in our own harness on the Agent SDK. Check blind whether it finds more real problems than Claude Code on the same model, two runs each.
+```
+
 ## An MCP server
 
 ```text
