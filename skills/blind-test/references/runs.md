@@ -57,6 +57,17 @@ Baseline arm: drop the skill line and add "Don't use any skills." Competitor arm
 - **The skill was actually used.** A treatment run that never opened `SKILL.md` is a baseline run with a label. Check its tool log, or ask every run to end its result with one line naming the rules it applied; a run that didn't use the skill is excluded and rerun under a new number.
 - **A frozen target.** Every run sees the same target. If it renders differently over time (live data, dates, random content), freeze it: fixed data, a fixed clock, a saved snapshot.
 
+## Harnesses
+
+The harness is the program around the model: its system prompt, its tools, its loop, its permissions and sandbox, the way it keeps context.
+
+- **A setting inside one harness** (hooks, subagents, a CLAUDE.md, an output style, a permission mode, context compaction): arms like any other, runs as subagents or new sessions, the setting on in one arm and off in the other.
+- **Two harnesses** (Claude Code against your own on the Agent SDK, against OpenCode or Codex CLI): the same model in both, pinned by its full id, and each harness's version recorded. Start each run with that harness's headless command (`claude -p`, `codex exec` and the like) from its own run folder, or open the sessions by hand, and paste the same request as the first message. The harness's own system prompt and tools are what's under test: leave them as they ship, and list them in the report.
+- **Two products** (one harness with its model against another with another) test the pair, and the report says the result can't be split between harness and model.
+- **Cost.** Harnesses count tokens their own way. Record what each one reports, with wall time and tool calls from its log, and compare time and tool calls where the token counts disagree.
+- **Isolation.** Harnesses differ in sandbox, network access, built-in browsers and scratch folders. Give every arm the same access, or record the difference as a limit: a system prompt that sends temporary files to a shared scratchpad, or a browser pane every run shares, changes what a run can see.
+- **The output.** Every run writes its result to the same file in its folder. Formats differ by harness; the full test's rewrite evens them out.
+
 ## How many runs
 
 | Runs per arm | What you can say |
