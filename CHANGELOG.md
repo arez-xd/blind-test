@@ -2,6 +2,17 @@
 
 All notable changes to this skill. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] - 2026-11-01
+
+### Added
+
+- **Agent harnesses as arms** (`references/runs.md`, Harnesses). A setting inside one harness (hooks, subagents, a CLAUDE.md, an output style, a permission mode, context compaction) runs like any other arm. Two harnesses run on the same model, pinned by its id, each run started with its harness's headless command, the harness's own system prompt and tools left as they ship; cost is compared by time and tool calls where token counts disagree, and differences in sandbox, network, browsers and scratch folders are evened out or recorded. A product against a product tests the pair of harness and model.
+- `examples/prompts.md` has a request for a harness.
+
+### Changed
+
+- The short description names harnesses where it named prompts; the longer lists in the README, SKILL.md and package description name both.
+
 ## [1.2.0] - 2026-11-01
 
 ### Added
