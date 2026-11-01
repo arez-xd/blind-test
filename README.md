@@ -4,10 +4,10 @@
 
 <h1 align="center">Blind Test</h1>
 
-<h3 align="center">Does your skill, prompt or MCP server actually help? Prove it.</h3>
+<h3 align="center">Does your skill, harness or MCP server actually help? Prove it.</h3>
 
 <p align="center">
-  An agent skill for blind tests of anything that changes what an agent does: skills, prompts, rule files, MCP servers.<br />
+  An agent skill for blind tests of anything that changes what an agent does: skills, prompts, rule files, MCP servers, agent harnesses.<br />
   A fictional target, a hidden key written first, traps for false alarms, and runs with and without the change.
 </p>
 
@@ -141,7 +141,7 @@ skills/blind-test/
 │   ├── levels.md                a quick check or the full test: what each does and costs, how to choose
 │   ├── key-format.md            K, R, T, F, B; sizing; what counts as found
 │   ├── calibration.md           pilot runs that settle controls and discriminating items; one revision; a frozen key
-│   ├── runs.md                  folders, the request template, isolation, how many runs
+│   ├── runs.md                  folders, the request template, isolation, how many runs, harnesses
 │   ├── grading.md               stripping, relabelling, normalizing, blind grading and the grades file
 │   ├── build-tests.md           briefs, data variants, measured and hand checks
 │   └── report.md                the report and claims that hold up
@@ -222,7 +222,7 @@ One is a demo. Two give a range. Three or more before you publish a number.
 A quick check: four runs and a grader. The full test adds pilot runs and a rewrite of every output: 13–16 agents and 90–110 minutes on Haiku in our runs. The agent names both levels with their cost before it builds anything.
 
 **Does it work beyond skills?**
-Yes: system prompts and rule files, plugins and MCP servers, a context file, a new version against the old one, two models on the same instructions. Anything you can switch on in one arm and off in the other.
+Yes: system prompts and rule files, plugins and MCP servers, a context file, a new version against the old one, two models on the same instructions, and agent harnesses: a setting inside one harness (hooks, subagents, a CLAUDE.md) or two harnesses on the same model. Anything you can switch on in one arm and off in the other.
 
 ## Related
 
