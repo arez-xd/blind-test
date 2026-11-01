@@ -18,7 +18,7 @@
   <a href="#install"><img src="https://img.shields.io/badge/Copilot-skill-24292f?logo=githubcopilot&logoColor=white" alt="GitHub Copilot skill" /></a>
   <a href="skills/blind-test/scripts"><img src="https://img.shields.io/badge/scripts-Node%2018%2B-339933?logo=nodedotjs&logoColor=white" alt="Node 18+" /></a>
   <a href="https://github.com/arez-xd/blind-test/actions/workflows/ci.yml"><img src="https://github.com/arez-xd/blind-test/actions/workflows/ci.yml/badge.svg" alt="Tests" /></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.2.0-8b5cf6" alt="Version 1.2.0" /></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.3.0-8b5cf6" alt="Version 1.3.0" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-f5c518" alt="MIT license" /></a>
 </p>
 
@@ -187,7 +187,7 @@ npx skills add arez-xd/blind-test
 | Cursor | `.cursor/skills/` (also reads `.claude/skills/`) | `~/.cursor/skills/` |
 | GitHub Copilot: VS Code agent mode, Copilot CLI, cloud agent | `.github/skills/` (also reads `.claude/skills/`) | `~/.copilot/skills/` |
 
-The agent picks the skill up when you ask it to test a skill, a prompt or a rule file; in Cursor you can also call it with `/blind-test`.
+The agent picks the skill up when you ask it to test a skill, a prompt, a rule file or a harness; in Cursor you can also call it with `/blind-test`.
 
 **Requirements:** Node.js 18 or newer for the scripts, and an agent that can start separate runs: subagents, or new sessions you open yourself.
 
