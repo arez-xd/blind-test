@@ -13,12 +13,16 @@ Outputs often reveal their arm (a skill's vocabulary, its report format). Normal
 
 ## Normalize
 
+Full test. A quick check skips the rewrite, grades the stripped and relabelled outputs as they are, and says in its report that a skill's format may have given its arm away (`references/levels.md`).
+
 A skill shapes its output: its section names, its severity scale, marks like "verified". A grader who recognises the format knows the arm. Before grading, rewrite every labelled output into one neutral form: one agent per label, each in its own folder with that one file, so no rewriter sees another output.
 
 ```text
 Your working folder is <folder>. Read only files inside it. Don't create tasks, tickets, pull requests, reminders or messages, and don't hand work to other agents.
 
 <LABEL>.md in the folder is one output of a test. Rewrite it as <LABEL>.normalized.md in the same folder, in a neutral form, so that a grader can compare outputs written in different styles. Keep the content; change only the form.
+
+Write the file in parts as you go: the heading first, then each finding as you reach it, appended to the file, then the other sections. Keep your notes short, and start writing before you have the whole rewrite worked out.
 
 # Output <LABEL>
 
@@ -47,6 +51,8 @@ Rules:
 
 When done, reply with the number of findings and the path of the file.
 ```
+
+When the runs use a small model, give the rewriters the grader's model. In one self-test, 4 of 8 rewriters on Haiku spent a whole reply, 128k output tokens, before writing anything, and none of 4 on Sonnet did. Writing in parts keeps each reply short on any model.
 
 Then check that no place was lost: `node scripts/refcheck.mjs graded/ normalized/` (or two files) lists, per label, every `file:line` of the original that the rewrite lacks, with the heading it sat under. A loss inside a finding or a "called fine" line means that rewrite is redone. A loss from a section the rules drop (a list of conventions or of checks with no problem attached) is expected: record it next to the grades. Keep the originals beside the rewrites to settle disputes.
 

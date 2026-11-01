@@ -38,6 +38,14 @@ We added a rule file for code reviews. Test whether reviews with it catch more o
 We're adding an MCP server with our design system. Test blind whether the agent's screens follow the system better with it connected, and what it costs in tokens.
 ```
 
+## Is it any good?
+
+```text
+Check whether the code-review skill in code-review/ is any good.
+```
+
+A request like this gets the quick check, or the agent asks which level you want.
+
 ## A quick check
 
 ```text

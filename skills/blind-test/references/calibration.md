@@ -4,7 +4,7 @@ The key marks each planted problem `control` (a strong baseline finds it) or `di
 
 ## When
 
-After the target check (step 3 of the loop) and before the first counted run. Write the calibration rule into the decision file before the first pilot: what turns an item into a control, how many discriminating items the decision rule needs, and what happens when there are fewer.
+In the full test (`references/levels.md`): after the target check (step 3 of the loop) and before the first counted run. Write the calibration rule into the decision file before the first pilot: what turns an item into a control, how many discriminating items the decision rule needs, and what happens when there are fewer.
 
 ## Pilots
 
@@ -35,4 +35,4 @@ Once the roles are set, write the key's sha256 next to the decision rule. From t
 
 ## Limits it adds
 
-Discriminating items are the ones two baseline runs missed. The final baseline runs are new runs and can still find them; that is part of the result, and the report says so. Calibration costs two baseline runs, four with a revision. For a quick check it can be skipped, and the report then says the roles are guesses.
+Discriminating items are the ones two baseline runs missed. The final baseline runs are new runs and can still find them; that is part of the result, and the report says so. Calibration costs two baseline runs, four with a revision. A quick check skips it, and its report then says the roles are guesses.

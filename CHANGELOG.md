@@ -2,6 +2,19 @@
 
 All notable changes to this skill. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2026-11-01
+
+### Added
+
+- **Two levels** (`references/levels.md`). A quick check by default: the key and the decision rule before any run, two runs per arm, one blind grader, about five agents. The full test adds calibration, the rewrite of every output into one format and three or more runs per arm before a public number. The agent takes the level the request asks for, or names both with their cost and asks; when it can't ask, it takes the quick check and says so in the first line of the report. It came out of a self-test on a plain request ("check whether this code-review skill is any good"): with Blind Test 1.1.0, all three runs on Haiku went through the full test, starting 13–16 agents and taking 90–110 minutes, against 6–14 minutes without it.
+
+### Changed
+
+- The rewrite before grading goes in parts: the rewriter's prompt asks for the heading first and each finding appended as it goes. In the same self-test, 4 of 8 rewriters on Haiku spent a whole reply, 128k output tokens, before writing anything; `grading.md` now suggests the grader's model for rewriters when the runs use a small one.
+- The description names both levels, and "is it any good" among the requests it answers.
+- The report and its template open with the level; calibration and the rewrite are marked as steps of the full test; the hand-over starts with the level.
+- `examples/prompts.md` has a plain "is it any good?" request.
+
 ## [1.1.0] - 2026-11-01
 
 ### Added

@@ -1,6 +1,8 @@
 # Blind test: <skill> <version>
 
-<date> · <model> · <runs per arm> runs per arm
+<date> · <model> · <quick check | full test> · <runs per arm> runs per arm
+
+<quick check: what it skipped (calibration, the rewrite into one format) and what the full test would add>
 
 ## What was tested
 
@@ -11,7 +13,7 @@
 
 ## Calibration
 
-<two pilot runs of the baseline: what they found; N controls, N discriminating; the revision of the target, if any; the key frozen at sha256 <first 8>…<last 4>>
+<full test: two pilot runs of the baseline: what they found; N controls, N discriminating; the revision of the target, if any; the key frozen at sha256 <first 8>…<last 4>. Quick check: skipped, so the roles are guesses>
 
 ## Result
 
@@ -34,7 +36,7 @@
 
 ## Grading
 
-<run paths stripped, outputs relabelled and rewritten into one format; places lost in the rewrites, if any, and where they sat; who graded>
+<run paths stripped, outputs relabelled and, in the full test, rewritten into one format; places lost in the rewrites, if any, and where they sat; who graded>
 
 ## Limits
 

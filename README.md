@@ -18,7 +18,7 @@
   <a href="#install"><img src="https://img.shields.io/badge/Copilot-skill-24292f?logo=githubcopilot&logoColor=white" alt="GitHub Copilot skill" /></a>
   <a href="skills/blind-test/scripts"><img src="https://img.shields.io/badge/scripts-Node%2018%2B-339933?logo=nodedotjs&logoColor=white" alt="Node 18+" /></a>
   <a href="https://github.com/arez-xd/blind-test/actions/workflows/ci.yml"><img src="https://github.com/arez-xd/blind-test/actions/workflows/ci.yml/badge.svg" alt="Tests" /></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.1.0-8b5cf6" alt="Version 1.1.0" /></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.2.0-8b5cf6" alt="Version 1.2.0" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-f5c518" alt="MIT license" /></a>
 </p>
 
@@ -63,8 +63,8 @@ A blind test checks a skill the way a careful reviewer would:
 - **Traps for false alarms.** Legitimate decisions that look like mistakes: a 20 px button that passes WCAG with spacing, glass on a floating header. A skill that makes the agent flag everything finds more and is worse; traps catch it.
 - **Folklore in the request.** A common wrong belief, the way a stakeholder would say it. Does the agent follow the request or the truth?
 - **Same request, isolated agents.** Baseline and skill, optionally a competitor, each in its own folder with nothing but the target and the request.
-- **Calibration.** Two pilot runs without the skill show which planted problems the baseline already finds; those become controls, and the evidence comes from the rest.
-- **Blind grading.** Outputs are relabelled and rewritten into one neutral format before grading, so you don't read the run you hope wins more generously, and a skill's format doesn't give its arm away.
+- **Calibration**, in the full test. Two pilot runs without the skill show which planted problems the baseline already finds; those become controls, and the evidence comes from the rest.
+- **Blind grading.** Outputs are relabelled before grading, so you don't read the run you hope wins more generously; in the full test they are also rewritten into one neutral format, so a skill's format doesn't give its arm away.
 - **Side effects logged.** The target server records every state-changing request; a review that submits a form shows up.
 
 ## How it works
@@ -73,10 +73,10 @@ A blind test checks a skill the way a careful reviewer would:
 flowchart LR
   C["Claims<br/>what the skill<br/>says it changes"] --> K["Key<br/>planted problems, traps,<br/>folklore, decision rule"]
   K --> T["Target<br/>fictional, no tells"]
-  T --> P["Calibration<br/>pilots without the skill,<br/>key frozen"]
+  T --> P["Calibration, full test<br/>pilots without the skill,<br/>key frozen"]
   P --> B["Runs without<br/>the skill"]
   P --> S["Runs with<br/>the skill"]
-  B --> N["Relabelled and<br/>normalized"]
+  B --> N["Relabelled;<br/>normalized in the full test"]
   S --> N
   N --> G["Blind grading<br/>against the key"]
   G --> R["Table per arm<br/>and the report"]
@@ -86,13 +86,25 @@ flowchart LR
 1. **Claims.** One sentence per thing the skill says it changes.
 2. **Key.** Planted problems per claim, marked control or discriminating; traps per rule that could over-fire; one folklore line; and the decision rule, all before the first run.
 3. **Target.** A fictional page, app, code copy, document set or brief with data, built from the key with no tells, and checked before any run.
-4. **Calibration.** Two pilot runs without the skill, graded against the key: what they find becomes a control. A target that's too easy gets one revision; then the key is frozen.
+4. **Calibration**, in the full test. Two pilot runs without the skill, graded against the key: what they find becomes a control. A target that's too easy gets one revision; then the key is frozen.
 5. **Runs.** The same request in every arm, fresh agents, own folders, a check that the treatment runs used the skill.
-6. **Grading.** Run paths stripped, outputs relabelled and rewritten into one neutral format, then graded blind against the key: found, partial, missed; traps flagged; folklore corrected or repeated; problems found beyond the key.
+6. **Grading.** Run paths stripped, outputs relabelled and, in the full test, rewritten into one neutral format, then graded blind against the key: found, partial, missed; traps flagged; folklore corrected or repeated; problems found beyond the key.
 7. **Fix and rerun.** Misses and false alarms become fixes to the skill, as classes; rerun, then once more on a target the skill was never tuned on.
 8. **Report.** The table, what only the skill found, and the limits next to every number.
 
 It handles review skills (find problems in something that exists) and build skills (make something from a brief, checked against data at ten times the size, empty states and awkward names).
+
+### Two levels
+
+| | Quick check | Full test |
+|---|---|---|
+| For | "is it any good?", "does my change help?" | numbers for a listing, a post or a README |
+| Calibration | skipped: the roles are guesses | two baseline pilots, four with a revision |
+| Runs per arm | 2 | 2, and 3+ before a public number |
+| Grading | relabelled, one grader | relabelled, rewritten into one format, refchecked |
+| Agents started | about 5 | 11 or more; 13–16 in our runs on Haiku, 90–110 minutes |
+
+The agent takes the level the request asks for, or names both with their cost and asks. When it can't ask, as a subagent, it takes the quick check and says so in the report.
 
 ## An example
 
@@ -126,6 +138,7 @@ skills/blind-test/
 ├── agents/                      metadata for Claude Code and Codex
 ├── references/
 │   ├── target-design.md         building a fictional target: realism, planting, traps, folklore
+│   ├── levels.md                a quick check or the full test: what each does and costs, how to choose
 │   ├── key-format.md            K, R, T, F, B; sizing; what counts as found
 │   ├── calibration.md           pilot runs that settle controls and discriminating items; one revision; a frozen key
 │   ├── runs.md                  folders, the request template, isolation, how many runs
@@ -192,7 +205,7 @@ npm test
 - Two runs per arm show whether a result is stable; a number for a listing wants three or more, and one more target the skill was never tuned on.
 - It tests one model at a time. A skill that helps a small model a lot may help a large one less.
 - Grading follows the key and stays blind, with the evidence line for each grade kept; it's still a reading, by an agent or a person.
-- A test costs runs: every arm is a full agent session, calibration adds two pilot runs (four with a revision), and preparing a test with the skill takes longer than improvising one.
+- A test costs runs: every arm is a full agent session, calibration adds two pilot runs (four with a revision), and preparing a test with the skill takes longer than improvising one. A quick check starts about five agents. In our runs on Haiku the full test started 13–16 and took 90–110 minutes; the same request without the skill took 6–14 minutes and ran no comparison.
 
 ## Common questions
 
@@ -204,6 +217,9 @@ Yes, and the report says so. It's still far better than tuning by feel: the key 
 
 **How many runs do I need?**
 One is a demo. Two give a range. Three or more before you publish a number.
+
+**How long does a test take?**
+A quick check: four runs and a grader. The full test adds pilot runs and a rewrite of every output: 13–16 agents and 90–110 minutes on Haiku in our runs. The agent names both levels with their cost before it builds anything.
 
 **Does it work beyond skills?**
 Yes: system prompts and rule files, plugins and MCP servers, a context file, a new version against the old one, two models on the same instructions. Anything you can switch on in one arm and off in the other.
