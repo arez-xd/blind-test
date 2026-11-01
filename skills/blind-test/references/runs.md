@@ -50,6 +50,7 @@ Baseline arm: drop the skill line and add "Don't use any skills." Competitor arm
 - **Fresh agent per run.** Never continue a run's conversation into another arm.
 - **No shared paths.** The key, other runs, the target's source (when the test is about the rendered result) and this skill stay outside the folders a run is given.
 - **Scratch inside the run folder.** An agent whose environment tells it to keep temporary files in a scratchpad or in `/tmp` will do so in the middle of a run, and so will you while probing the target. The request names the run folder as the only place to write; your own probes, stderr captures and checks go inside `blind/`.
+- **Shared tools.** A browser pane or an MCP server the environment offers is one instance for every run: runs launched together open tabs side by side, see each other's pages and slow each other down. Give each run its own headless browser in its folder, or run those arms one at a time, and record which runs used a shared tool.
 - **Competitor skills in a sandbox.** Their own folder, their own `HOME` and cache, no hooks installed into the real environment. Check what their scripts download before running them; verify checksums when the project publishes them.
 - **Same model, same tools, same viewport, same time limits** in every arm.
 - **A clean baseline.** Skills, rules or plugins installed in the environment load into the baseline too. List what's installed and disable what overlaps with the skill under test, or record it as a limit.
@@ -69,3 +70,5 @@ Run the arms interleaved (baseline-1, treatment-1, baseline-2…) so a change in
 ## Record per run
 
 Model, date, tokens, wall time, tool calls if available, the posts.log line count (or the diff of a code copy), anything the run created outside its folder (a queued task, a ticket, a message, a scratch file in `/tmp` — withdraw or remove it and count it as a side effect), and anything the agent says it couldn't do.
+
+Check writes outside the folder in the run's tool log, every path it wrote to and every shell command that names a path outside its folder, and on disk, with a search for files changed outside the folder since the run started. Runs don't always report their own scratch files, and the agents a run starts report them to the run, if at all.
