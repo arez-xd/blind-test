@@ -115,7 +115,7 @@ A design-review skill, tested on a fictional fleet dashboard with 16 planted pro
 | with the skill | 2 | 15–16 | 0 | corrected | 0 |
 | without | 1 | 10 + 2 partial | 1 | corrected | 0 |
 
-Only with the skill: a fact told twice; a KPI that disagrees with its own rows; a composite score nobody can act on; a list that scrolls off the monitor it's built for. The skill is [Design Taste Pro](https://agensi.io/r/ADAMREEL?to=/skills/design-taste-pro). Limits: one target, one model, the key written by the skill's author, the same limits the report template asks you to state.
+Only with the skill: a fact told twice; a KPI that disagrees with its own rows; a composite score nobody can act on; a list that scrolls off the monitor it's built for. The skill is a design skill for dense, data-heavy screens. Limits: one target, one model, the key written by the skill's author, the same limits the report template asks you to state.
 
 ## Does it work?
 
@@ -128,7 +128,7 @@ Only with the skill: a fact told twice; a KPI that disagrees with its own rows; 
 
 The decision rule, written before the runs, was met. Only with the skill: a fictional local target in place of the client's live form, planted problems with locations and no tells, a key written before the runs, traps, claims mapped to the skill's rules, submissions logged by a local server. Limits: one target, one model, two runs per arm, the key written by the skill's author; with the skill the runs took about twice the tokens and four times the time. Report, key and grades: [`examples/self-test`](examples/self-test/report.md).
 
-**Asked in plain words.** Given nothing but "Check whether the code-review skill in code-review/ is any good.", Haiku with Blind Test 1.3.0 compared the skill with the agent without it in all three runs: the same request in both arms, a decision rule written first, fresh runs graded blind. It covered all 5 discriminating items of the key against 0 without it, in 43–52 minutes a run, and wrote nothing outside its folders; without Blind Test, every run gave an opinion. Those runs used a private code-review target, so this round's files aren't in this repository. The [Agensi edition](https://agensi.io/r/ADAMREEL?to=/skills/blind-test) adds a map of what the agent finds without a skill, measured on 126 planted problems.
+**Asked in plain words.** Given nothing but "Check whether the code-review skill in code-review/ is any good.", Haiku with Blind Test 1.3.0 compared the skill with the agent without it in all three runs: the same request in both arms, a decision rule written first, fresh runs graded blind. It covered all 5 discriminating items of the key against 0 without it, in 43–52 minutes a run, and wrote nothing outside its folders; without Blind Test, every run gave an opinion. Those runs used a private code-review target, so this round's files aren't in this repository.
 
 **Used on a whole skill.** [Under the Hood](https://github.com/arez-xd/under-the-hood) was tested with this method, and every round is public in its [`examples/blind-test`](https://github.com/arez-xd/under-the-hood/tree/main/examples/blind-test): the targets, the keys, the grades and each run's report, including round 1, which fell short of its decision rule, and the fixes that followed.
 
@@ -229,7 +229,6 @@ Yes: system prompts and rule files, plugins and MCP servers, a context file, a n
 ## Related
 
 - [Under the Hood](https://github.com/arez-xd/under-the-hood): checks an AI service before you pay; tested with this method, every round public.
-- [Design Taste Pro](https://agensi.io/r/ADAMREEL?to=/skills/design-taste-pro): the skill in the example above, for dashboards, pro tools and iOS screens.
 - [Design Taste](https://github.com/arez-xd/ux-ui-design-taste): senior design judgment for interfaces built with AI agents.
 
 ## License
